@@ -1,11 +1,10 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/Button";
 import { formatDate, formatTime } from "@/lib/utils";
 
 export default function PatientAppointmentsPage() {
-  const [activeTab, setActiveTab] = useState("upcoming");
+  // const [activeTab, setActiveTab] = useState("upcoming");
+  const [activeTab, setActiveTab] = "upcoming";
 
   const upcomingAppointments = [
     {

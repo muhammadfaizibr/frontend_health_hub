@@ -51,7 +51,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-primary">
-      <Header user={user} />
+      <Header />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary-color to-primary-light text-inverse py-20">
@@ -148,13 +148,11 @@ export default function HomePage() {
           <p className="text-xl mb-8 opacity-90">
             Join thousands of patients who trust {platformName} for their healthcare needs.
           </p>
-          {!isAuthenticated && (
             <Link href="/register">
               <Button size="lg" className="bg-inverse text-primary-color hover:bg-inverse/90">
                 Create Your Account
               </Button>
             </Link>
-          )}
         </div>
       </section>
 

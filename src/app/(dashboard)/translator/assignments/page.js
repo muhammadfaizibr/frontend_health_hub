@@ -1,15 +1,8 @@
-"use client";
-
-import React, { useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/forms/Input";
-import { Select } from "@/components/forms/Select";
+import React from "react";
+import { AssignmentFilters } from "@/components/features/translator/AssignmentFilters";
+import { AssignmentList } from "@/components/features/translator/AssignmentList";
 
 export default function TranslatorAssignmentsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [languageFilter, setLanguageFilter] = useState("");
-
   const assignments = [
     {
       id: 1,
@@ -154,152 +147,14 @@ export default function TranslatorAssignmentsPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="card bg-surface p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Input
-            placeholder="Search assignments..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon="search"
-          />
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            options={statusOptions}
-            placeholder="Filter by status"
-          />
-          <Select
-            value={languageFilter}
-            onChange={(e) => setLanguageFilter(e.target.value)}
-            options={languageOptions}
-            placeholder="Filter by language"
-          />
-        </div>
-      </div>
+      <AssignmentFilters 
+        onFilterChange={(filters) => console.log("Filters changed:", filters)}
+      />
 
-      {/* Assignments List */}
-      <div className="flex flex-col gap-4">
-        {filteredAssignments.map((assignment) => (
-          <div key={assignment.id} className="card bg-surface p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold text-primary mb-2">
-                  {assignment.patient} ({assignment.patientId})
-                </h3>
-                <p className="text-secondary text-lg mb-2">
-                  {assignment.appointment}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-secondary mb-2">
-                  <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">
-                      schedule
-                    </span>
-                    <span>{assignment.date} at {assignment.time}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">
-                      timer
-                    </span>
-                    <span>{assignment.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">
-                      language
-                    </span>
-                    <span>{assignment.language}</span>
-                  </div>
-                </div>
-                <p className="text-sm text-secondary mb-2">
-                  Dr. {assignment.doctor} • {assignment.hospital}
-                </p>
-                <p className="text-xs text-secondary mb-2">
-                  Reason: {assignment.reason} • Case: {assignment.caseId}
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-secondary italic">
-                    {assignment.type}
-                  </span>
-                  <span className="text-xs text-secondary">
-                    Room: {assignment.room}
-                  </span>
-                  {assignment.isEmergency && (
-                    <span className="badge badge-error text-xs">Emergency</span>
-                  )}
-                </div>
-              </div>
-              <div className="text-right">
-                <span className={getStatusBadge(assignment.status)}>
-                  {assignment.status}
-                </span>
-                {assignment.rating && (
-                  <div className="mt-2 flex items-center gap-1">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <span
-                        key={i}
-                        className={`material-symbols-outlined text-sm ${
-                          i < assignment.rating ? 'text-warning' : 'text-secondary'
-                        }`}
-                      >
-                        star
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              {assignment.status === 'scheduled' && (
-                <>
-                  <Button size="sm">
-                    <span className="material-symbols-outlined text-sm mr-1">
-                      meeting_room
-                    </span>
-                    Join
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <span className="material-symbols-outlined text-sm mr-1">
-                      info
-                    </span>
-                    Details
-                  </Button>
-                </>
-              )}
-              {assignment.status === 'completed' && (
-                <Button variant="outline" size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
-                    visibility
-                  </span>
-                  View Details
-                </Button>
-              )}
-            </div>
-            
-            {assignment.feedback && (
-              <div className="mt-4 p-3 bg-surface-secondary rounded-lg">
-                <p className="text-sm text-secondary italic">
-                  &quot;{assignment.feedback}&quot;
-                </p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {filteredAssignments.length === 0 && (
-        <div className="text-center py-12">
-          <span className="material-symbols-outlined text-6xl text-secondary mb-4">
-            assignment
-          </span>
-          <h3 className="text-xl font-semibold text-primary mb-2">
-            No assignments found
-          </h3>
-          <p className="text-secondary">
-            Try adjusting your search criteria or check back later for new assignments.
-          </p>
-        </div>
-      )}
+      <AssignmentList 
+        assignments={assignments}
+        filters={{ searchTerm: "", statusFilter: "", languageFilter: "" }}
+      />
     </div>
   );
 }

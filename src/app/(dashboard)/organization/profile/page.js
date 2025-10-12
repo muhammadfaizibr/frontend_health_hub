@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/forms/Input";
 import { Textarea } from "@/components/forms/Textarea";
+import { ProfileForm } from "@/components/forms/ProfileForm";
+import { ContactInfoForm } from "@/components/forms/ContactInfoForm";
+import { TabNavigation } from "@/components/ui/TabNavigation";
 
 export default function OrganizationProfilePage() {
   const [isEditing, setIsEditing] = useState(false);

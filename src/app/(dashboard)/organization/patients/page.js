@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/forms/Input";
 import { Select } from "@/components/forms/Select";
