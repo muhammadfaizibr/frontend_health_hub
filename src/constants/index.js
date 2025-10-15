@@ -142,10 +142,11 @@ export const ERROR_MESSAGES = {
   REQUIRED: 'This field is required',
   INVALID_EMAIL: 'Please enter a valid email address',
   INVALID_PHONE: 'Please enter a valid phone number',
+  INVALID_NAME: 'Name can only contain letters and spaces',
   PASSWORD_TOO_SHORT: `Password must be at least ${VALIDATION_RULES.PASSWORD_MIN_LENGTH} characters`,
   NAME_TOO_SHORT: `Name must be at least ${VALIDATION_RULES.NAME_MIN_LENGTH} characters`,
   NAME_TOO_LONG: `Name must be less than ${VALIDATION_RULES.NAME_MAX_LENGTH} characters`,
-  PASSWORDS_DONT_MATCH: 'Passwords do not match',
+  PASSWORD_MISMATCH: 'Passwords do not match',
   LOGIN_FAILED: 'Invalid email or password',
   NETWORK_ERROR: 'Network error. Please try again.',
   UNKNOWN_ERROR: 'An unexpected error occurred'

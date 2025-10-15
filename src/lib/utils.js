@@ -42,6 +42,12 @@ export const truncateText = (text, maxLength) => {
 };
 
 // Validation utilities
+export const validateName = (name) => {
+  const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
+  return nameRegex.test(name);
+};
+
+
 export const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

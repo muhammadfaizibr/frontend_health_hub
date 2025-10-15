@@ -1,4 +1,4 @@
-// app/(auth)/login/page.jsx
+// app/(auth)/forget-password/page.jsx
 
 "use client";
 
@@ -14,16 +14,15 @@ import { authService } from "@/lib/api/services/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
 
 /**
- * Login Page Component
- * Handles user authentication and role-based redirection
+ * Forget Password Page Component
+ * Handles password reset email sending
  */
-export default function LoginPage() {
+export default function ForgetPasswordPage() {
   const router = useRouter();
-  const setUser = useAuthStore((state) => state.setUser);
-  
+  const [emailSent, setEmailSent] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -36,9 +35,9 @@ export default function LoginPage() {
     const checkAuth = () => {
       if (authService.isAuthenticated()) {
         const role = authService.getUserRole();
-        
+
         if (role) {
-          console.log('✅ User already logged in, redirecting to dashboard');
+          console.log("✅ User already logged in, redirecting to dashboard");
           redirectToDashboard(role);
         }
       }
@@ -50,21 +49,24 @@ export default function LoginPage() {
   /**
    * Handle input field changes
    */
-  const handleInputChange = useCallback((e) => {
-    const { name, value } = e.target;
-    
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Clear field error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-    
-    // Clear API error
-    if (apiError) {
-      setApiError("");
-    }
-  }, [errors, apiError]);
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+
+      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      // Clear field error when user starts typing
+      if (errors[name]) {
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
+
+      // Clear API error
+      if (apiError) {
+        setApiError("");
+      }
+    },
+    [errors, apiError]
+  );
 
   /**
    * Validate form fields
@@ -80,11 +82,6 @@ export default function LoginPage() {
       newErrors.email = ERROR_MESSAGES.INVALID_EMAIL;
     }
 
-    // Password validation
-    if (!formData.password) {
-      newErrors.password = ERROR_MESSAGES.REQUIRED;
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -95,20 +92,20 @@ export default function LoginPage() {
    */
   const redirectToDashboard = (role) => {
     const normalizedRole = role.toLowerCase();
-    
+
     const dashboardMap = {
-      'doctor': '/doctor',
-      'patient': '/patient',
-      'translator': '/translator',
-      'organization': '/organization',
+      doctor: "/doctor",
+      patient: "/patient",
+      translator: "/translator",
+      organization: "/organization",
     };
 
     const dashboardPath = dashboardMap[normalizedRole];
-    
+
     if (dashboardPath) {
       router.push(dashboardPath);
     } else {
-      setApiError('Invalid user role. Please contact support.');
+      setApiError("Invalid user role. Please contact support.");
       setIsLoading(false);
     }
   };
@@ -116,45 +113,35 @@ export default function LoginPage() {
   /**
    * Handle form submission
    */
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setApiError("");
-
-    // Validate form
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Login API call
-      const response = await authService.login(
-        formData.email,
-        formData.password
-      );
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setApiError("");
+      setEmailSent(false);
       
-      // Store user data
-      setUser(response.user);
-
-      // Get user role and redirect
-      const role = (response.user.role || '').toLowerCase();
-      
-      if (!role) {
-        throw new Error('User role not found');
+      // Validate form
+      if (!validateForm()) {
+        return;
       }
 
-      console.log('✅ Login successful, redirecting to:', role, 'dashboard');
+      setIsLoading(true);
 
-      // Redirect to appropriate dashboard
-      redirectToDashboard(role);
+      try {
+        // Forget Password API call
+        const response = await authService.forgetPassword(formData.email);
 
-    } catch (error) {
-      console.error('❌ Login error:', error);
-      setApiError(error.message || ERROR_MESSAGES.LOGIN_FAILED);
-      setIsLoading(false);
-    }
-  }, [formData, setUser, validateForm]);
+        setEmailSent(true);
+        setIsLoading(false);
+
+        console.log("✅ Reset Password Email Sent. Please check your inbox.");
+      } catch (error) {
+        console.error("❌ Forget Password error:", error);
+        setApiError(error.message || ERROR_MESSAGES.LOGIN_FAILED);
+        setIsLoading(false);
+      }
+    },
+    [formData, validateForm]
+  );
 
   return (
     <div className="min-h-screen bg-primary flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -167,15 +154,26 @@ export default function LoginPage() {
             </span>
           </div>
           <h2 className="mt-6 text-3xl font-bold text-primary">
-            Welcome Back
+            Forgot Password
           </h2>
           <p className="mt-2 text-sm text-secondary">
-            Sign in to your {platformName} account
+            Enter your email to reset your password for {platformName}.
           </p>
         </div>
 
-        {/* Login Form */}
+        {/* Forget Password Form */}
         <form className="mt-8 flex flex-col gap-6" onSubmit={handleSubmit}>
+          {/* Success Message */}
+          {emailSent && (
+            <div className="alert alert-success">
+              <span className="material-symbols-outlined">check_circle</span>
+              <div>
+                <strong>Email sent successfully!</strong>
+                <p className="text-sm">Please check your inbox for password reset instructions.</p>
+              </div>
+            </div>
+          )}
+
           {/* API Error Alert */}
           {apiError && (
             <div className="alert alert-error">
@@ -194,49 +192,9 @@ export default function LoginPage() {
               onChange={handleInputChange}
               error={errors.email}
               icon="email"
-              disabled={isLoading}
+              disabled={isLoading || emailSent}
               autoComplete="email"
             />
-
-            <Input
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInputChange}
-              error={errors.password}
-              icon="lock"
-              disabled={isLoading}
-              autoComplete="current-password"
-            />
-          </div>
-
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="form-checkbox"
-                disabled={isLoading}
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-secondary"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link
-                href="/forgot-password"
-                className="text-primary-color hover:text-primary-dark"
-              >
-                Forgot your password?
-              </Link>
-            </div>
           </div>
 
           {/* Submit Button */}
@@ -244,20 +202,20 @@ export default function LoginPage() {
             type="submit"
             fullWidth
             isLoading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || emailSent}
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Sending Request..." : emailSent ? "Email Sent" : "Send Reset Link"}
           </Button>
 
-          {/* Sign Up Link */}
+          {/* Back to Login Link */}
           <div className="text-center">
             <p className="text-sm text-secondary">
-              Don&apos;t have an account?{" "}
+              Remember your password?{" "}
               <Link
-                href="/register"
+                href="/login"
                 className="text-primary-color hover:text-primary-dark font-medium"
               >
-                Sign up here
+                Back to Login
               </Link>
             </p>
           </div>
@@ -265,10 +223,7 @@ export default function LoginPage() {
 
         {/* Back to Home */}
         <div className="text-center">
-          <Link
-            href="/"
-            className="text-sm text-secondary hover:text-primary"
-          >
+          <Link href="/" className="text-sm text-secondary hover:text-primary">
             ← Back to Home
           </Link>
         </div>

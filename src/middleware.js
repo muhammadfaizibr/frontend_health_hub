@@ -15,12 +15,30 @@ export function middleware(request) {
   // ==========================================
   // 1. PUBLIC ROUTES - No authentication required
   // ==========================================
-  const publicPaths = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
-  
-  if (publicPaths.includes(pathname)) {
-    // If user is already logged in and tries to access login/register
+  const publicPaths = ['/', '/login', '/register', '/forget-password'];
+
+  const publicPathPatterns = [
+    /^\/reset-password\/[^/]+\/[^/]+$/, // Matches /reset-password/{userId}/{token}
+  ];
+
+  /**
+   * Check if the path is public
+   */
+  const isPublicPath = (path) => {
+    // Check exact matches
+    if (publicPaths.includes(path)) {
+      return true;
+    }
+    // Check pattern matches
+    return publicPathPatterns.some((pattern) => pattern.test(path));
+  };
+
+  if (isPublicPath(pathname)) {
+    // If user is already logged in and tries to access login/register/forget-password
     // Redirect them to their role-based dashboard
-    if ((pathname === '/login' || pathname === '/register') && accessToken) {
+    const authPages = ['/login', '/register', '/forget-password'];
+    
+    if (authPages.includes(pathname) && accessToken) {
       try {
         const userRole = getUserRoleFromToken(accessToken);
         
@@ -50,7 +68,9 @@ export function middleware(request) {
   // ==========================================
   if (!accessToken) {
     console.log('❌ No token found, redirecting to login');
-    return NextResponse.redirect(new URL('/login', request.url));
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   // ==========================================

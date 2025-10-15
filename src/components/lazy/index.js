@@ -7,8 +7,8 @@ export const OrganizationDashboardPage = lazy(() => import('@/app/(dashboard)/or
 export const TranslatorDashboardPage = lazy(() => import('@/app/(dashboard)/translator/page'));
 
 // Lazy load form components
-export const LoginPage = lazy(() => import('@/app/login/page'));
-export const RegisterPage = lazy(() => import('@/app/register/page'));
+export const LoginPage = lazy(() => import('@/app/(auth)/login/page'));
+export const RegisterPage = lazy(() => import('@/app/(auth)/register/page'));
 
 // Lazy load complex dashboard sections
 export const AnalyticsPage = lazy(() => import('@/app/(dashboard)/organization/analytics/page'));

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { platformName } from "@/config/global";
 
-export const Header = memo(({ user, onLogout }) => {
+export const Header = memo(() => {
   return (
     <header className="bg-surface border-b border-color">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -38,20 +38,6 @@ export const Header = memo(({ user, onLogout }) => {
 
           {/* User Actions */}
           <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-secondary">
-                  Welcome, {user.name}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onLogout}
-                >
-                  Logout
-                </Button>
-              </div>
-            ) : (
               <div className="flex items-center gap-2">
                 <Link href="/login">
                   <Button variant="ghost" size="sm">
@@ -64,7 +50,6 @@ export const Header = memo(({ user, onLogout }) => {
                   </Button>
                 </Link>
               </div>
-            )}
           </div>
         </div>
       </div>
