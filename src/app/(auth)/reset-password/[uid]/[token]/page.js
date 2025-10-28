@@ -117,17 +117,18 @@ export default function ResetPasswordPage() {
     // Password validation
     const passwordError = validatePassword(formData.password);
     if (passwordError) {
-      newErrors.password = passwordError;
+      newErrors.new_password = passwordError;
     }
 
     // Confirm password validation
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = ERROR_MESSAGES.REQUIRED;
+      newErrors.confirm_new_password = ERROR_MESSAGES.REQUIRED;
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirm_new_password = "Passwords do not match";
     }
 
     setErrors(newErrors);
+    console.log(newErrors)
     return Object.keys(newErrors).length === 0;
   };
 

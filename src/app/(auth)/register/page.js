@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/forms/Input";
 import { platformName } from "@/config/global";
-import { validateName, validateEmail } from "@/lib/utils";
+import { validateName, validateEmail } from "@/lib/utils/global";
 import { ERROR_MESSAGES } from "@/constants";
 import { authService } from "@/lib/api/services/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -131,8 +131,7 @@ export default function RegisterPage() {
       
       setApiError("");
       setErrors({});
-      setEmailSent(false);
-
+      
       if (!validateForm()) {
         return;
       }

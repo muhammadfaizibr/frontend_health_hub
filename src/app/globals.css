@@ -12,7 +12,7 @@
   --primary-color: #53d22d;
   --primary-dark: #3eb820;
   --primary-light: #6fdd4a;
-  --primary-alpha-10: rgba(83, 210, 45, 0.1);
+  --primary-alpha-10: rgba(83, 210, 45, 0.025);
   --primary-alpha-20: rgba(83, 210, 45, 0.2);
   --primary-alpha-50: rgba(83, 210, 45, 0.5);
   
@@ -177,6 +177,10 @@ h6 { font-size: var(--font-size-base); }
 p { 
   font-size: var(--font-size-base); 
   margin: 0;
+}
+
+button, a{
+  cursor: pointer;
 }
 
 .text-2xs { font-size: var(--font-size-2xs); }
@@ -689,7 +693,10 @@ p {
 .bg-surface-90 { background-color: var(--surface-color-90); }
 .bg-surface-secondary { background-color: var(--surface-secondary); }
 .bg-card { background-color: var(--card-background); }
+.bg-card-light { background-color: var(--surface-secondary); }
 .bg-primary-color { background-color: var(--primary-color); }
+.bg-primary-color\/10 { background-color: var(--primary-alpha-10); }
+
 .bg-primary-dark { background-color: var(--primary-dark); }
 .bg-primary-light { background-color: var(--primary-light); }
 .bg-secondary-color { background-color: var(--secondary-color); }

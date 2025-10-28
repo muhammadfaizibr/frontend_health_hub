@@ -1,41 +1,59 @@
-// lib/api/endpoints.js
-
 export const API_ENDPOINTS = {
-  // Auth
   AUTH: {
     LOGIN: 'base/auth/login/',
     REGISTER: 'base/auth/register/',
     FORGET_PASSWORD: 'base/auth/forget-password/',
-    RESET_PASSWORD: "base/auth/reset-password/",
+    RESET_PASSWORD: 'base/auth/reset-password/',
     CHANGE_PASSWORD: 'base/auth/change-password/',
-    LOGOUT: '/auth/logout/',
+    LOGOUT: 'base/auth/logout/',
     REFRESH: 'base/auth/refresh/',
-    ME: '/auth/me/',
+    PROFILE: 'base/users/',
   },
   
-  // Doctor
   DOCTOR: {
-    PROFILE: '/doctor/profile/',
-    PATIENTS: '/doctor/patients/',
-    APPOINTMENTS: '/doctor/appointments/',
+    PROFILES: 'doctors/profiles/',
+    PROFILE: (id) => `doctors/profiles/${id}/`,
+    MY_PROFILE: 'doctors/profiles/my_profile/',
+    SEARCH: 'doctors/profiles/search_doctors/',
+    CATEGORIES: 'doctors/profiles/categories/',
+    REVIEWS: (id) => `doctors/reviews/?doctor=${id}`,
+    PATIENTS: 'doctors/patients/',
+    APPOINTMENTS: 'doctors/appointments/',
   },
   
-  // Patient
   PATIENT: {
-    PROFILE: '/patient/profile/',
-    APPOINTMENTS: '/patient/appointments/',
-    DOCTORS: '/patient/doctors/',
+    PROFILE: 'patients/profile/',
+    APPOINTMENTS: 'patients/appointments/',
+    BOOK_APPOINTMENT: 'patients/appointments/book/',
+    CASES: 'patients/cases/',
+    MEDICATIONS: 'patients/medications/',
+    DOCTORS: 'patients/doctors/',
   },
   
-  // Translator
+  BASE: {
+    LANGUAGES: 'base/languages/',
+    LANGUAGE: (id) => `base/languages/${id}/`,
+    EDUCATION: 'base/education/',
+    EDUCATION_RECORD: (id) => `base/education/${id}/`,
+    EXPERIENCE: 'base/experience/',
+    EXPERIENCE_RECORD: (id) => `base/experience/${id}/`,
+    CERTIFICATIONS: 'base/certifications/',
+    CERTIFICATION: (id) => `base/certifications/${id}/`,
+    AVAILABILITY_SLOTS: 'base/availability-slots/',
+    AVAILABILITY_SLOT: (id) => `base/availability-slots/${id}/`,
+    MY_AVAILABILITY: 'base/availability-slots/my_availability/',
+    SERVICE_FEES: 'base/service-fees/',
+    SERVICE_FEE: (id) => `base/service-fees/${id}/`,
+    MY_FEES: 'base/service-fees/my_fees/',
+  },
+  
   TRANSLATOR: {
-    PROFILE: '/translator/profile/',
-    ASSIGNMENTS: '/translator/assignments/',
+    PROFILE: 'translators/profile/',
+    ASSIGNMENTS: 'translators/assignments/',
   },
   
-  // Organization
   ORGANIZATION: {
-    PROFILE: '/organization/profile/',
-    MEMBERS: '/organization/members/',
+    PROFILE: 'organizations/profile/',
+    MEMBERS: 'organizations/members/',
   },
 };
