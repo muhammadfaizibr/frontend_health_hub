@@ -149,7 +149,7 @@ export default function TranslatorSchedulePage() {
           />
           <div className="flex items-end">
             <Button fullWidth>
-              <span className="material-symbols-outlined text-sm mr-2">add</span>
+              <span className="material-symbols-outlined text-sm">add</span>
               Add Time Slot
             </Button>
           </div>

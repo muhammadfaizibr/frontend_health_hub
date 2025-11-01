@@ -1,19 +1,15 @@
-// lib/api/utils/api-wrapper.js
-
 import { apiClient } from "../axios";
 import { handleApiError } from "./error-handler";
 import { handleApiResponse } from "./response-handler";
 
 /**
  * Wrapper for GET requests
- * @param {string} endpoint - API endpoint
- * @param {Object} config - Axios config options
- * @param {string} successMessage - Optional success message
- * @returns {Promise<any>}
  */
 export const apiGet = async (endpoint, config = {}, successMessage = null) => {
   try {
+    console.log(endpoint, 'endpoint');
     const response = await apiClient.get(endpoint, config);
+    console.log(response, 'response');
     return handleApiResponse(response, successMessage);
   } catch (error) {
     handleApiError(error, "GET request failed");
@@ -22,11 +18,6 @@ export const apiGet = async (endpoint, config = {}, successMessage = null) => {
 
 /**
  * Wrapper for POST requests
- * @param {string} endpoint - API endpoint
- * @param {Object} data - Request body data
- * @param {Object} config - Axios config options
- * @param {string} successMessage - Optional success message
- * @returns {Promise<any>}
  */
 export const apiPost = async (
   endpoint,
@@ -44,11 +35,6 @@ export const apiPost = async (
 
 /**
  * Wrapper for PUT requests
- * @param {string} endpoint - API endpoint
- * @param {Object} data - Request body data
- * @param {Object} config - Axios config options
- * @param {string} successMessage - Optional success message
- * @returns {Promise<any>}
  */
 export const apiPut = async (
   endpoint,
@@ -66,11 +52,6 @@ export const apiPut = async (
 
 /**
  * Wrapper for PATCH requests
- * @param {string} endpoint - API endpoint
- * @param {Object} data - Request body data
- * @param {Object} config - Axios config options
- * @param {string} successMessage - Optional success message
- * @returns {Promise<any>}
  */
 export const apiPatch = async (
   endpoint,
@@ -88,10 +69,6 @@ export const apiPatch = async (
 
 /**
  * Wrapper for DELETE requests
- * @param {string} endpoint - API endpoint
- * @param {Object} config - Axios config options
- * @param {string} successMessage - Optional success message
- * @returns {Promise<any>}
  */
 export const apiDelete = async (
   endpoint,

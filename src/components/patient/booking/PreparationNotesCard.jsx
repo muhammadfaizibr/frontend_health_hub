@@ -49,7 +49,7 @@ export default function PreparationNotesCard() {
 
       {isTelehealth && (
         <div className="mt-4 p-3 bg-secondary rounded-lg">
-          <div className="flex items-start gap-2">
+          <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-info text-sm mt-0.5">info</span>
             <p className="text-xs text-secondary">
               You'll receive a video call link via email 24 hours before your appointment

@@ -175,33 +175,33 @@ export default function OrganizationStaffPage() {
       
       <div className="flex gap-2 mt-4 pt-4 border-t border-color">
         <Button size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             edit
           </span>
           Edit
         </Button>
         <Button variant="outline" size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             visibility
           </span>
           View Details
         </Button>
         <Button variant="outline" size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             message
           </span>
           Message
         </Button>
         {member.status === "active" ? (
           <Button variant="outline" size="sm" className="text-error border-error hover:bg-error hover:text-inverse">
-            <span className="material-symbols-outlined text-sm mr-1">
+            <span className="material-symbols-outlined text-sm">
               block
             </span>
             Deactivate
           </Button>
         ) : (
           <Button variant="outline" size="sm" className="text-success border-success hover:bg-success hover:text-inverse">
-            <span className="material-symbols-outlined text-sm mr-1">
+            <span className="material-symbols-outlined text-sm">
               check_circle
             </span>
             Activate
@@ -221,7 +221,7 @@ export default function OrganizationStaffPage() {
           </p>
         </div>
         <Button>
-          <span className="material-symbols-outlined text-sm mr-2">person_add</span>
+          <span className="material-symbols-outlined text-sm">person_add</span>
           Add Staff Member
         </Button>
       </div>
@@ -262,7 +262,7 @@ export default function OrganizationStaffPage() {
           />
           
           <Button fullWidth>
-            <span className="material-symbols-outlined text-sm mr-2">filter_list</span>
+            <span className="material-symbols-outlined text-sm">filter_list</span>
             Apply Filters
           </Button>
         </div>

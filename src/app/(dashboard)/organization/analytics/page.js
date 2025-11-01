@@ -122,11 +122,11 @@ export default function OrganizationAnalyticsPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">download</span>
+            <span className="material-symbols-outlined text-sm">download</span>
             Export Report
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">refresh</span>
+            <span className="material-symbols-outlined text-sm">refresh</span>
             Refresh Data
           </Button>
         </div>
@@ -153,7 +153,7 @@ export default function OrganizationAnalyticsPage() {
           
           <div className="flex items-end">
             <Button fullWidth>
-              <span className="material-symbols-outlined text-sm mr-2">settings</span>
+              <span className="material-symbols-outlined text-sm">settings</span>
               Customize Report
             </Button>
           </div>

@@ -151,7 +151,7 @@ export default function TranslatorProfilePage() {
             </>
           ) : (
             <Button onClick={() => setIsEditing(true)}>
-              <span className="material-symbols-outlined text-sm mr-2">edit</span>
+              <span className="material-symbols-outlined text-sm">edit</span>
               Edit Profile
             </Button>
           )}
@@ -355,7 +355,7 @@ export default function TranslatorProfilePage() {
                     onClick={addLanguage}
                     className="w-full"
                   >
-                    <span className="material-symbols-outlined text-sm mr-2">add</span>
+                    <span className="material-symbols-outlined text-sm">add</span>
                     Add Language
                   </Button>
                 )}
@@ -394,7 +394,7 @@ export default function TranslatorProfilePage() {
                     onClick={addCertification}
                     className="w-full"
                   >
-                    <span className="material-symbols-outlined text-sm mr-2">add</span>
+                    <span className="material-symbols-outlined text-sm">add</span>
                     Add Certification
                   </Button>
                 )}

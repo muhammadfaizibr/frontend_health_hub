@@ -252,7 +252,7 @@ export default function TranslatorMedicalDocumentsPage() {
             <div className="flex justify-end gap-2">
               {doc.status === 'pending' && (
                 <Button size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     edit
                   </span>
                   Start Translation
@@ -260,7 +260,7 @@ export default function TranslatorMedicalDocumentsPage() {
               )}
               {doc.status === 'in_progress' && (
                 <Button size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     edit
                   </span>
                   Continue
@@ -268,14 +268,14 @@ export default function TranslatorMedicalDocumentsPage() {
               )}
               {doc.status === 'completed' && (
                 <Button variant="outline" size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     download
                   </span>
                   Download
                 </Button>
               )}
               <Button variant="outline" size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   visibility
                 </span>
                 View Details

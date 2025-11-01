@@ -111,11 +111,11 @@ export default function PatientHealthTrackingPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">add</span>
+            <span className="material-symbols-outlined text-sm">add</span>
             Log Metric
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">analytics</span>
+            <span className="material-symbols-outlined text-sm">analytics</span>
             View Reports
           </Button>
         </div>
@@ -223,19 +223,19 @@ export default function PatientHealthTrackingPage() {
               <h2 className="text-xl font-semibold text-primary mb-4">Quick Actions</h2>
               <div className="flex flex-col gap-3">
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">add</span>
+                  <span className="material-symbols-outlined text-sm">add</span>
                   Log Blood Pressure
                 </Button>
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">add</span>
+                  <span className="material-symbols-outlined text-sm">add</span>
                   Log Weight
                 </Button>
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">add</span>
+                  <span className="material-symbols-outlined text-sm">add</span>
                   Log Exercise
                 </Button>
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">add</span>
+                  <span className="material-symbols-outlined text-sm">add</span>
                   Log Sleep
                 </Button>
               </div>

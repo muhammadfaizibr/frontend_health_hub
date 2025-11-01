@@ -17,7 +17,7 @@ const RatingStars = ({ rating }) => (
 
 export function ReviewCard({ review }) {
   return (
-    <div className="border-b border-color pb-4 last:border-b-0">
+    <div className="bg-card-light border-b border-color pb-4 last:border-b-0">
       <div className="flex items-center justify-between mb-2">
         <h4 className="font-semibold text-primary">{review.patientName}</h4>
         <RatingStars rating={review.rating} />

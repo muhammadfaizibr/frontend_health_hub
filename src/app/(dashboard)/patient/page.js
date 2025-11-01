@@ -31,13 +31,13 @@ export default function PatientDashboardPage() {
         <div className="flex gap-3">
           <Link href="/patient/emergency">
             <Button variant="outline" className="text-error border-error hover:bg-error hover:text-inverse">
-              <span className="material-symbols-outlined text-sm mr-2">emergency</span>
+              <span className="material-symbols-outlined text-sm">emergency</span>
               Emergency
             </Button>
           </Link>
           <Link href="/patient/find-doctor">
             <Button>
-              <span className="material-symbols-outlined text-sm mr-2">add</span>
+              <span className="material-symbols-outlined text-sm">add</span>
               Book Appointment
             </Button>
           </Link>

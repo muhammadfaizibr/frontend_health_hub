@@ -5,6 +5,7 @@ import NavLink from "./NavLink";
 export default function PatientSidebar() {
   const navItems = [
     { href: "/patient", icon: "dashboard", label: "Dashboard" },
+    { href: "/patient/cases", icon: "calendar_today", label: "cases" },
     { href: "/patient/appointments", icon: "calendar_today", label: "Appointments" },
     { href: "/patient/find-doctor", icon: "search", label: "Find Doctor" },
     { href: "/patient/medical-records", icon: "medical_services", label: "Medical Records" },

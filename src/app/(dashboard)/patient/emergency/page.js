@@ -97,7 +97,7 @@ export default function PatientEmergencyPage() {
               className="bg-error hover:bg-error/90 text-inverse"
               onClick={() => handleEmergencyCall(emergencyContacts[0])}
             >
-              <span className="material-symbols-outlined text-sm mr-2">phone</span>
+              <span className="material-symbols-outlined text-sm">phone</span>
               Call 911 Now
             </Button>
           </div>
@@ -126,7 +126,7 @@ export default function PatientEmergencyPage() {
                     size="sm"
                     onClick={() => handleEmergencyCall(contact)}
                   >
-                    <span className="material-symbols-outlined text-sm mr-1">phone</span>
+                    <span className="material-symbols-outlined text-sm">phone</span>
                     Call
                   </Button>
                 </div>
@@ -146,7 +146,7 @@ export default function PatientEmergencyPage() {
             <h3 className="font-semibold text-primary mb-3">General Guidelines</h3>
             <ul className="flex flex-col gap-2">
               {emergencyInstructions.map((instruction, index) => (
-                <li key={index} className="flex items-start gap-2">
+                <li key={index} className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary-color text-sm mt-1">
                     check_circle
                   </span>
@@ -172,15 +172,15 @@ export default function PatientEmergencyPage() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Button variant="outline" fullWidth>
-          <span className="material-symbols-outlined text-sm mr-2">location_on</span>
+          <span className="material-symbols-outlined text-sm">location_on</span>
           Find Nearest Hospital
         </Button>
         <Button variant="outline" fullWidth>
-          <span className="material-symbols-outlined text-sm mr-2">medical_services</span>
+          <span className="material-symbols-outlined text-sm">medical_services</span>
           Urgent Care Centers
         </Button>
         <Button variant="outline" fullWidth>
-          <span className="material-symbols-outlined text-sm mr-2">share</span>
+          <span className="material-symbols-outlined text-sm">share</span>
           Share Location
         </Button>
       </div>

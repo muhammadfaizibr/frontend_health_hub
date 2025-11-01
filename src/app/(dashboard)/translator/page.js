@@ -246,13 +246,13 @@ export default function TranslatorDashboardPage() {
         <div className="flex gap-3">
           <Link href="/translator/assignments">
             <Button variant="outline">
-              <span className="material-symbols-outlined text-sm mr-2">assignment</span>
+              <span className="material-symbols-outlined text-sm">assignment</span>
               View All Assignments
             </Button>
           </Link>
           <Link href="/translator/schedule">
             <Button>
-              <span className="material-symbols-outlined text-sm mr-2">schedule</span>
+              <span className="material-symbols-outlined text-sm">schedule</span>
               Manage Schedule
             </Button>
           </Link>
@@ -395,13 +395,13 @@ export default function TranslatorDashboardPage() {
                       </span>
                       <div className="mt-2 flex gap-2">
                         <Button size="sm">
-                          <span className="material-symbols-outlined text-sm mr-1">
+                          <span className="material-symbols-outlined text-sm">
                             meeting_room
                           </span>
                           Join
                         </Button>
                         <Button variant="outline" size="sm">
-                          <span className="material-symbols-outlined text-sm mr-1">
+                          <span className="material-symbols-outlined text-sm">
                             info
                           </span>
                           Details
@@ -456,7 +456,7 @@ export default function TranslatorDashboardPage() {
                     </span>
                     {doc.status === 'pending' && (
                       <Button size="sm">
-                        <span className="material-symbols-outlined text-sm mr-1">
+                        <span className="material-symbols-outlined text-sm">
                           edit
                         </span>
                         Start
@@ -464,7 +464,7 @@ export default function TranslatorDashboardPage() {
                     )}
                     {doc.status === 'completed' && (
                       <Button variant="outline" size="sm">
-                        <span className="material-symbols-outlined text-sm mr-1">
+                        <span className="material-symbols-outlined text-sm">
                           download
                         </span>
                         Download

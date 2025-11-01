@@ -19,7 +19,7 @@ export default function AvailabilityCard({ availabilitySlots, loading }) {
   return (
     <div className="flex flex-col card bg-surface p-6 gap-4">
       <h3 className="text-lg font-semibold text-primary mb-4">Weekly Availability</h3>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col">
         {[0, 1, 2, 3, 4, 5, 6].map((day) => {
           const daySlots = groupedSlots[day] || [];
           

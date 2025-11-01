@@ -141,7 +141,7 @@ export default function TranslatorCertificationsPage() {
           </p>
         </div>
         <Button>
-          <span className="material-symbols-outlined text-sm mr-2">add</span>
+          <span className="material-symbols-outlined text-sm">add</span>
           Add Certification
         </Button>
       </div>
@@ -207,13 +207,13 @@ export default function TranslatorCertificationsPage() {
               </div>
               <div className="text-right">
                 <Button variant="outline" size="sm" className="mb-2">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     edit
                   </span>
                   Edit
                 </Button>
                 <Button variant="outline" size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     download
                   </span>
                   Download
@@ -253,14 +253,14 @@ export default function TranslatorCertificationsPage() {
               <div className="flex flex-col gap-2">
                 {cert.credentialUrl && (
                   <Button variant="outline" size="sm">
-                    <span className="material-symbols-outlined text-sm mr-1">
+                    <span className="material-symbols-outlined text-sm">
                       link
                     </span>
                     Verify Online
                   </Button>
                 )}
                 <Button variant="outline" size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     visibility
                   </span>
                   View Details

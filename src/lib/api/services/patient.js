@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from '@/lib/api/utils/api-wrapper';
+import { apiGet, apiPost, apiPut, apiDelete } from '@/lib/api/utils/api-wrapper';
 import { API_ENDPOINTS } from '@/lib/api/endpoints';
 
 export const getProfile = async () => {
@@ -19,6 +19,15 @@ export const getAppointments = async (filters = {}) => {
   return data;
 };
 
+export const getAppointment = async (appointmentId) => {
+  const data = await apiGet(
+    `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/`,
+    {},
+    'Appointment retrieved successfully'
+  );
+  return data;
+};
+
 export const bookAppointment = async (appointmentData) => {
   const data = await apiPost(
     API_ENDPOINTS.PATIENT.BOOK_APPOINTMENT,
@@ -28,8 +37,16 @@ export const bookAppointment = async (appointmentData) => {
   return data;
 };
 
+export const cancelAppointment = async (appointmentId) => {
+  const data = await apiPost(
+    `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/cancel/`,
+    {},
+    'Appointment cancelled successfully'
+  );
+  return data;
+};
+
 export const createAppointment = async (appointmentData) => {
-  // Deprecated: Use bookAppointment instead
   return bookAppointment(appointmentData);
 };
 
@@ -38,6 +55,77 @@ export const getCases = async (filters = {}) => {
     API_ENDPOINTS.PATIENT.CASES,
     { params: filters },
     'Cases retrieved successfully'
+  );
+  return data;
+};
+
+export const getCase = async (caseId) => {
+  const data = await apiGet(
+    `${API_ENDPOINTS.PATIENT.CASES}${caseId}/`,
+    {},
+    'Case retrieved successfully'
+  );
+  return data;
+};
+
+export const createCase = async (caseData) => {
+  const data = await apiPost(
+    API_ENDPOINTS.PATIENT.CASES,
+    caseData,
+    'Case created successfully'
+  );
+  return data;
+};
+
+export const updateCase = async (caseId, caseData) => {
+  const data = await apiPut(
+    `${API_ENDPOINTS.PATIENT.CASES}${caseId}/`,
+    caseData,
+    'Case updated successfully'
+  );
+  return data;
+};
+
+export const deleteCase = async (caseId) => {
+  const data = await apiDelete(
+    `${API_ENDPOINTS.PATIENT.CASES}${caseId}/`,
+    'Case deleted successfully'
+  );
+  return data;
+};
+
+export const getPrescriptions = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.DOCTOR.PRESCRIPTIONS,
+    { params: filters },
+    'Prescriptions retrieved successfully'
+  );
+  return data;
+};
+
+export const getReports = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.PATIENT.REPORTS,
+    { params: filters },
+    'Reports retrieved successfully'
+  );
+  return data;
+};
+
+export const createReport = async (reportData) => {
+  const data = await apiPost(
+    API_ENDPOINTS.PATIENT.REPORTS,
+    reportData,
+    'Report created successfully'
+  );
+  return data;
+};
+
+export const createReview = async (reviewData) => {
+  const data = await apiPost(
+    API_ENDPOINTS.DOCTOR.REVIEWS,
+    reviewData,
+    'Review submitted successfully'
   );
   return data;
 };
@@ -60,14 +148,34 @@ export const getDoctors = async (filters = {}) => {
   return data;
 };
 
+export const uploadFile = async (fileData) => {
+  const data = await apiPost(
+    API_ENDPOINTS.FILES.UPLOAD,
+    fileData,
+    'File uploaded successfully'
+  );
+  return data;
+};
+
 export const patientService = {
   getProfile,
   getAppointments,
+  getAppointment,
   bookAppointment,
-  createAppointment, // Keep for backward compatibility
+  cancelAppointment,
+  createAppointment,
   getCases,
+  getCase,
+  createCase,
+  updateCase,
+  deleteCase,
+  getPrescriptions,
+  getReports,
+  createReport,
+  createReview,
   getMedications,
   getDoctors,
+  uploadFile,
 };
 
 export default patientService;

@@ -60,11 +60,11 @@ export default function PatientPrescriptionsPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">add</span>
+            <span className="material-symbols-outlined text-sm">add</span>
             Add Medication
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">local_pharmacy</span>
+            <span className="material-symbols-outlined text-sm">local_pharmacy</span>
             Find Pharmacy
           </Button>
         </div>

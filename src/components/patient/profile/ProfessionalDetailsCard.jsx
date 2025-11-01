@@ -21,7 +21,7 @@ export default function ProfessionalDetailsCard({ doctor }) {
       <h3 className="text-lg font-semibold text-primary mb-4">
         Professional Details
       </h3>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
         {details.map((detail, index) => (
           <div 
             key={index} 

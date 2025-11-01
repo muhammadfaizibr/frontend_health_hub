@@ -1,24 +1,25 @@
-import React from "react";
+"use client";
 
-export default function StatusBadge({ status }) {
-  const statusClasses = {
-    "Confirmed": "badge badge-success",
-    "Pending": "badge badge-warning",
-    "Completed": "badge badge-info",
-    "Cancelled": "badge badge-error",
-    "In Progress": "badge badge-primary",
-    "Open": "badge badge-info",
-    "confirmed": "badge badge-success",
-    "completed": "badge badge-info",
-    "cancelled": "badge badge-error",
-    "pending": "badge badge-warning",
-    "active": "badge badge-success",
-    "expired": "badge badge-error"
-  };
+import React from "react";
+import PropTypes from "prop-types";
+import { Badge } from "./Badge";
+
+export const StatusBadge = ({ status, size = "md", className = "" }) => {
+  if (!status) return null;
+
+  const normalized = status.toLowerCase().replace(/\s+/g, '_');
   
   return (
-    <span className={statusClasses[status] || "badge badge-secondary"}>
+    <Badge variant={normalized} size={size} className={className}>
       {status}
-    </span>
+    </Badge>
   );
-}
+};
+
+StatusBadge.propTypes = {
+  status: PropTypes.string.isRequired,
+  size: PropTypes.oneOf(["sm", "md", "lg"]),
+  className: PropTypes.string
+};
+
+export default StatusBadge;

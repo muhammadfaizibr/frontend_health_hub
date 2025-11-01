@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext } from "react";
 import { useToast } from "@/lib/hooks/useToast";
-import { ErrorToastContainer } from "@/components/ui/ErrorToast";
+import { ToastContainer } from "@/components/ui/Toast";
 
 const ToastContext = createContext(null);
 
@@ -12,7 +12,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={toast}>
       {children}
-      <ErrorToastContainer 
+      <ToastContainer 
         toasts={toast.toasts} 
         removeToast={toast.removeToast} 
       />

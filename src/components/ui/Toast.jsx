@@ -2,23 +2,22 @@
 
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Button } from "./Button";
 
-export function ErrorToast({ 
+export function Toast({ 
   message, 
   onClose, 
   duration = 5000,
-  type = "error" // error, success, warning, info
+  type = "error"
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    // Trigger enter animation
     requestAnimationFrame(() => {
       setIsVisible(true);
     });
 
-    // Auto dismiss
     if (duration > 0) {
       const timer = setTimeout(() => {
         handleClose();
@@ -32,42 +31,42 @@ export function ErrorToast({
     setIsExiting(true);
     setTimeout(() => {
       onClose();
-    }, 300); // Match animation duration
+    }, 300);
   };
 
   const getTypeStyles = () => {
     switch (type) {
       case "success":
         return {
-          bg: "bg-green-50 dark:bg-green-900/20",
-          border: "border-green-200 dark:border-green-800",
+          bgClass: "bg-success/10",
+          borderClass: "border-success",
           icon: "check_circle",
-          iconColor: "text-green-600 dark:text-green-400",
-          textColor: "text-green-900 dark:text-green-100"
+          iconClass: "text-success",
+          textClass: "text-success"
         };
       case "warning":
         return {
-          bg: "bg-yellow-50 dark:bg-yellow-900/20",
-          border: "border-yellow-200 dark:border-yellow-800",
+          bgClass: "bg-warning/10",
+          borderClass: "border-warning",
           icon: "warning",
-          iconColor: "text-yellow-600 dark:text-yellow-400",
-          textColor: "text-yellow-900 dark:text-yellow-100"
+          iconClass: "text-warning",
+          textClass: "text-warning"
         };
       case "info":
         return {
-          bg: "bg-blue-50 dark:bg-blue-900/20",
-          border: "border-blue-200 dark:border-blue-800",
+          bgClass: "bg-info/10",
+          borderClass: "border-info",
           icon: "info",
-          iconColor: "text-blue-600 dark:text-blue-400",
-          textColor: "text-blue-900 dark:text-blue-100"
+          iconClass: "text-info",
+          textClass: "text-info"
         };
-      default: // error
+      default:
         return {
-          bg: "bg-red-50 dark:bg-red-900/20",
-          border: "border-red-200 dark:border-red-800",
+          bgClass: "bg-error/10",
+          borderClass: "border-error",
           icon: "error",
-          iconColor: "text-red-600 dark:text-red-400",
-          textColor: "text-red-900 dark:text-red-100"
+          iconClass: "text-error",
+          textClass: "text-error"
         };
     }
   };
@@ -77,40 +76,37 @@ export function ErrorToast({
   return (
     <div
       className={`
-        flex items-start gap-3 p-4 rounded-lg border shadow-lg backdrop-blur-sm
+        flex items-center gap-3 p-4 rounded-lg border shadow-lg backdrop-blur-sm
         min-w-[320px] max-w-[420px]
-        ${styles.bg} ${styles.border}
+        ${styles.bgClass} ${styles.borderClass}
         transition-all duration-300 ease-out
         ${isVisible && !isExiting ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
       `}
       role="alert"
     >
-      <span className={`material-symbols-outlined ${styles.iconColor} flex-shrink-0`}>
+      <span className={`material-symbols-outlined ${styles.iconClass} flex-shrink-0`}>
         {styles.icon}
       </span>
       
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium ${styles.textColor} break-words`}>
+        <p className={`text-sm font-medium ${styles.textClass} break-words`}>
           {message}
         </p>
       </div>
       
-      <button
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={handleClose}
-        className={`
-          flex-shrink-0 ${styles.iconColor} hover:opacity-70 
-          transition-opacity focus:outline-none focus:ring-2 
-          focus:ring-offset-1 rounded
-        `}
-        aria-label="Close notification"
+        className={`flex-shrink-0 p-1 ${styles.iconClass}`}
       >
         <span className="material-symbols-outlined text-lg">close</span>
-      </button>
+      </Button>
     </div>
   );
 }
 
-export function ErrorToastContainer({ toasts, removeToast }) {
+export function ToastContainer({ toasts, removeToast }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -120,10 +116,10 @@ export function ErrorToastContainer({ toasts, removeToast }) {
   if (!mounted) return null;
 
   return createPortal(
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none">
+    <div className="fixed bottom-4 right-4 z-50 flex items-center flex-col gap-2 pointer-events-none">
       {toasts.map((toast) => (
         <div key={toast.id} className="pointer-events-auto">
-          <ErrorToast
+          <Toast
             message={toast.message}
             type={toast.type}
             duration={toast.duration}
@@ -136,4 +132,4 @@ export function ErrorToastContainer({ toasts, removeToast }) {
   );
 }
 
-export default ErrorToast;
+export default Toast;

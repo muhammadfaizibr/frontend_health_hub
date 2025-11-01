@@ -3,17 +3,8 @@
 import React, { useState, useCallback } from "react";
 import SearchFilters from "@/components/patient/search/SearchFilters";
 import DoctorCard from "@/components/patient/search/DoctorCard";
+import EmptyState from "@/components/ui/EmptyState";
 import { useDoctorSearch, useCategories } from "@/lib/hooks/useDoctors";
-
-const EmptyState = ({ icon, title, description }) => (
-  <div className="text-center py-12">
-    <span className="material-symbols-outlined text-6xl text-secondary mb-4">
-      {icon}
-    </span>
-    <h3 className="text-xl font-semibold text-primary mb-2">{title}</h3>
-    <p className="text-secondary">{description}</p>
-  </div>
-);
 
 export default function PatientFindDoctorPage() {
   const [searchTerm, setSearchTerm] = useState("");

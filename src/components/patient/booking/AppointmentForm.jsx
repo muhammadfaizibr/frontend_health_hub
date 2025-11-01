@@ -15,10 +15,12 @@ export default function AppointmentForm({
   selectedDuration,
   formData,
   isLoading,
+  caseIdFromUrl,
   onDateSelect,
   onTimeSlotSelect,
   onDurationChange,
   onFormDataChange,
+  onCaseChange,
   onSubmit,
   onCancel
 }) {
@@ -55,14 +57,16 @@ export default function AppointmentForm({
       <AppointmentDetailsSection
         formData={formData}
         onInputChange={handleInputChange}
+        onCaseChange={onCaseChange}
+        caseIdFromUrl={caseIdFromUrl}
       />
 
-      <div className="flex gap-4">
-        <Button type="submit" isLoading={isLoading} disabled={!isFormValid}>
-          {isLoading ? "Booking..." : "Book Appointment"}
-        </Button>
+      <div className="flex justify-end gap-4">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
           Cancel
+        </Button>
+        <Button type="submit" isLoading={isLoading} disabled={!isFormValid}>
+          {isLoading ? "Booking..." : "Book Appointment"}
         </Button>
       </div>
     </form>

@@ -194,7 +194,7 @@ export default function OrganizationCreditsPage() {
       </div>
       
       <Button fullWidth>
-        <span className="material-symbols-outlined text-sm mr-2">shopping_cart</span>
+        <span className="material-symbols-outlined text-sm">shopping_cart</span>
         Purchase Package
       </Button>
     </div>
@@ -235,11 +235,11 @@ export default function OrganizationCreditsPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">download</span>
+            <span className="material-symbols-outlined text-sm">download</span>
             Export Report
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">add</span>
+            <span className="material-symbols-outlined text-sm">add</span>
             Purchase Credits
           </Button>
         </div>

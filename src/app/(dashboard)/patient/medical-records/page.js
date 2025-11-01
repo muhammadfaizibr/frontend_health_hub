@@ -92,11 +92,11 @@ export default function PatientMedicalRecordsPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">download</span>
+            <span className="material-symbols-outlined text-sm">download</span>
             Export Records
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">share</span>
+            <span className="material-symbols-outlined text-sm">share</span>
             Share Records
           </Button>
         </div>
@@ -195,15 +195,15 @@ export default function PatientMedicalRecordsPage() {
               <h2 className="text-xl font-semibold text-primary mb-4">Quick Actions</h2>
               <div className="flex flex-col gap-3">
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">upload</span>
+                  <span className="material-symbols-outlined text-sm">upload</span>
                   Upload Document
                 </Button>
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">print</span>
+                  <span className="material-symbols-outlined text-sm">print</span>
                   Print Summary
                 </Button>
                 <Button fullWidth variant="outline">
-                  <span className="material-symbols-outlined text-sm mr-2">share</span>
+                  <span className="material-symbols-outlined text-sm">share</span>
                   Share with Doctor
                 </Button>
               </div>

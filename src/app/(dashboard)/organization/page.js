@@ -124,11 +124,11 @@ export default function OrganizationDashboardPage() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">download</span>
+            <span className="material-symbols-outlined text-sm">download</span>
             Export Report
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">add</span>
+            <span className="material-symbols-outlined text-sm">add</span>
             Add Staff
           </Button>
         </div>

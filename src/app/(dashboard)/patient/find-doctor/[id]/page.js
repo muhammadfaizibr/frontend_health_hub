@@ -48,7 +48,6 @@ export default function PatientDoctorProfilePage({ params }) {
   const experienceList = experience?.results || [];
   const certificationsList = certifications?.results || [];
   const slotsList = availabilitySlots?.results || [];
-  const feesList = serviceFees?.results || [];
 
   if (profileLoading) return <LoadingSpinner />;
 

@@ -241,7 +241,7 @@ export default function OrganizationAppointmentsPage() {
           {appointment.status === "confirmed" && (
             <>
               <Button size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   medical_services
                 </span>
                 Start Visit
@@ -255,7 +255,7 @@ export default function OrganizationAppointmentsPage() {
           {appointment.status === "pending" && (
             <>
               <Button size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   check
                 </span>
                 Confirm
@@ -269,7 +269,7 @@ export default function OrganizationAppointmentsPage() {
           {appointment.status === "completed" && (
             <>
               <Button variant="outline" size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   visibility
                 </span>
                 View Notes
@@ -305,11 +305,11 @@ export default function OrganizationAppointmentsPage() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">sync</span>
+            <span className="material-symbols-outlined text-sm">sync</span>
             Sync Calendar
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">add</span>
+            <span className="material-symbols-outlined text-sm">add</span>
             Schedule Appointment
           </Button>
         </div>
@@ -339,7 +339,7 @@ export default function OrganizationAppointmentsPage() {
           />
           
           <Button fullWidth>
-            <span className="material-symbols-outlined text-sm mr-2">filter_list</span>
+            <span className="material-symbols-outlined text-sm">filter_list</span>
             Apply Filters
           </Button>
         </div>

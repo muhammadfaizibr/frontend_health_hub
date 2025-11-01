@@ -9,7 +9,7 @@ export default function ActiveCaseCard({ caseItem }) {
   return (
     <div className="border border-color rounded-lg p-3 hover:shadow-md transition-shadow bg-card-light">
       {/* Single Row Layout */}
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         {/* Left: Main Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">

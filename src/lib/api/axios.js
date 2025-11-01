@@ -1,23 +1,23 @@
-// lib/api/axios.js
-
 import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
-// Main axios instance
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // 🔥 IMPORTANT: Cookies automatically bhejega
+  withCredentials: true,
 });
 
-// Request interceptor (optional logging)
 apiClient.interceptors.request.use(
   (config) => {
-    // Debug ke liye
+    // Remove Content-Type for FormData to let browser set it with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+    
     console.log('API Request:', config.method.toUpperCase(), config.url);
     return config;
   },
@@ -26,7 +26,6 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor - Auto token refresh
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -46,17 +45,13 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Agar 401 error hai aur refresh nahi kiya
     if (error.response?.status === 401 && !originalRequest._retry) {
-      
-      // Login/register endpoints skip karo
       if (originalRequest.url.includes('/login/') || 
           originalRequest.url.includes('/register/')) {
         return Promise.reject(error);
       }
 
       if (isRefreshing) {
-        // Agar pehle se refresh ho raha hai, queue mein daalo
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
@@ -68,21 +63,14 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Refresh token API call (cookie automatically jayegi)
         await apiClient.post('/auth/refresh/');
-        
         processQueue(null);
-        
-        // Original request retry karo
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        
-        // Refresh fail - login pe redirect
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
-        
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -91,4 +79,4 @@ apiClient.interceptors.response.use(
 
     return Promise.reject(error);
   }
-);  
+);

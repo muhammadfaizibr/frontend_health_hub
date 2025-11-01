@@ -253,13 +253,13 @@ export default function TranslatorAssignmentsPage() {
               {assignment.status === 'scheduled' && (
                 <>
                   <Button size="sm">
-                    <span className="material-symbols-outlined text-sm mr-1">
+                    <span className="material-symbols-outlined text-sm">
                       meeting_room
                     </span>
                     Join
                   </Button>
                   <Button variant="outline" size="sm">
-                    <span className="material-symbols-outlined text-sm mr-1">
+                    <span className="material-symbols-outlined text-sm">
                       info
                     </span>
                     Details
@@ -268,7 +268,7 @@ export default function TranslatorAssignmentsPage() {
               )}
               {assignment.status === 'completed' && (
                 <Button variant="outline" size="sm">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     visibility
                   </span>
                   View Details

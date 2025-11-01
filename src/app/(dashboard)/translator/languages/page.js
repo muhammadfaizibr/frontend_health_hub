@@ -129,7 +129,7 @@ export default function TranslatorLanguagesPage() {
           </p>
         </div>
         <Button>
-          <span className="material-symbols-outlined text-sm mr-2">add</span>
+          <span className="material-symbols-outlined text-sm">add</span>
           Add Language
         </Button>
       </div>
@@ -183,7 +183,7 @@ export default function TranslatorLanguagesPage() {
               </div>
               <div className="text-right">
                 <Button variant="outline" size="sm" className="mb-2">
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     edit
                   </span>
                   Edit
@@ -193,7 +193,7 @@ export default function TranslatorLanguagesPage() {
                   size="sm"
                   className={language.isActive ? "text-error" : "text-success"}
                 >
-                  <span className="material-symbols-outlined text-sm mr-1">
+                  <span className="material-symbols-outlined text-sm">
                     {language.isActive ? "pause" : "play_arrow"}
                   </span>
                   {language.isActive ? "Deactivate" : "Activate"}

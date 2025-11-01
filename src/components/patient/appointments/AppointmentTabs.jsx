@@ -1,29 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
-
-// Separate Tab Button Component
-const TabButton = ({ tab, isActive, onClick }) => (
-  <button
-    onClick={() => onClick(tab.id)}
-    className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-      isActive
-        ? "border-primary-color text-primary-color"
-        : "border-transparent text-secondary hover:text-primary hover:border-color"
-    }`}
-  >
-    {tab.label} ({tab.count})
-  </button>
-);
+import React from "react";
+import { Tabs } from "@/components/ui/Tabs";
 
 export default function AppointmentTabs({ 
+  activeTab,
+  onTabChange,
   upcomingCount = 0, 
   conductedCount = 0, 
-  cancelledCount = 0, 
-  children 
+  cancelledCount = 0
 }) {
-  const [activeTab, setActiveTab] = useState("upcoming");
-
   const tabs = [
     { id: "upcoming", label: "Upcoming", count: upcomingCount },
     { id: "conducted", label: "Conducted", count: conductedCount },
@@ -31,20 +17,12 @@ export default function AppointmentTabs({
   ];
 
   return (
-    <>
-      <div className="border-b border-color">
-        <nav className="flex gap-8">
-          {tabs.map((tab) => (
-            <TabButton
-              key={tab.id}
-              tab={tab}
-              isActive={activeTab === tab.id}
-              onClick={setActiveTab}
-            />
-          ))}
-        </nav>
-      </div>
-      {children(activeTab)}
-    </>
+    <Tabs
+      tabs={tabs}
+      activeTab={activeTab}
+      onChange={onTabChange}
+      showCounts={true}
+      variant="underline"
+    />
   );
 }

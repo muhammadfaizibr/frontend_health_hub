@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { Button } from "@/components/ui/Button";
 import { convertToDayOfWeek } from "@/lib/utils/global";
 
 export default function DateSelector({
@@ -87,7 +88,7 @@ export default function DateSelector({
                 type="button"
                 onClick={() => onDateSelect(date)}
                 className={`
-                  p-4 rounded-lg border-1 transition-all hover:shadow-md
+                  bg-card-light p-4 rounded-lg border transition-all hover:shadow-md
                   ${isDateSelected(date)
                     ? 'border-primary-color bg-primary-color/10 text-primary-color shadow-md'
                     : 'border-color hover:border-primary-color/50 text-secondary hover:text-primary'
@@ -100,7 +101,7 @@ export default function DateSelector({
           </div>
           
           {availableDates.length > 12 && (
-            <p className="text-xs text-secondary text-center">
+            <p className="text-xs text-secondary text-center mt-3">
               Showing next 12 available dates
             </p>
           )}

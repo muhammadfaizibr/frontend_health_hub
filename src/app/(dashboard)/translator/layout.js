@@ -97,7 +97,7 @@ export default function TranslatorDashboardLayout({ children }) {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-4 md:p-8 max-w-full overflow-x-auto">
+        <main className="flex-1 p-4 md:p-8 max-w-full">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { Button } from "@/components/ui/Button";
 import { convertToDayOfWeek, formatTime } from "@/lib/utils/global";
 
 function generateTimeSlots(availabilitySlot, durationMinutes) {
@@ -140,7 +141,7 @@ export default function TimeSlotSelector({
                 onTimeSlotSelect(null);
               }}
               className={`
-                p-3 rounded-lg border-1 transition-all hover:shadow-md
+                bg-card-light p-3 rounded-lg border transition-all hover:shadow-md
                 ${selectedDuration === option.value
                   ? 'border-primary-color bg-primary-color/10 text-primary-color shadow-md'
                   : 'border-color hover:border-primary-color/50 text-secondary'
@@ -197,7 +198,7 @@ export default function TimeSlotSelector({
                 type="button"
                 onClick={() => onTimeSlotSelect(slot)}
                 className={`
-                  p-3 rounded-lg border-1 transition-all text-left hover:shadow-md
+                  bg-card-light p-3 rounded-lg border transition-all text-left hover:shadow-md
                   ${isSlotSelected(slot)
                     ? 'border-primary-color bg-primary-color/10 shadow-md'
                     : 'border-color hover:border-primary-color/50'

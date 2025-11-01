@@ -1,13 +1,13 @@
 "use client";
 
 import React, { use, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useProfile } from "@/lib/hooks/useDoctors";
 import { useAvailabilitySlots, useServiceFees } from "@/lib/hooks/useBase";
 import { useBookAppointment } from "@/lib/hooks/usePatients";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
-import ErrorState from "@/components/ui/ErrorBoundary";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import AppointmentForm from "@/components/patient/booking/AppointmentForm";
 import BookingSummaryCard from "@/components/patient/booking/BookingSummaryCard";
 import PreparationNotesCard from "@/components/patient/booking/PreparationNotesCard";
@@ -15,14 +15,27 @@ import { useToastContext } from "@/lib/providers/ToastProvider";
 
 export default function PatientBookAppointmentPage({ params }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const toast = useToastContext();
-
   const { id: doctorId } = use(params);
+  
+  // Get case ID from URL parameters
+  const caseIdFromUrl = searchParams.get('case');
+  
+  // Validate UUID format
+  const isValidUUID = (uuid) => {
+    if (!uuid) return true; // null/undefined is valid (no case selected)
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
+  };
   
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedDuration, setSelectedDuration] = useState(null);
   const [formData, setFormData] = useState({
+    case_id: caseIdFromUrl || "",
+    case_title: "",
+    case_description: "",
     language: "not-required",
     reason: "",
     specialRequests: ""
@@ -48,6 +61,23 @@ export default function PatientBookAppointmentPage({ params }) {
   const slotsList = availabilitySlots?.results || [];
   const feesList = serviceFees?.results || [];
 
+  // Show warning if case ID format is invalid - only run once on mount
+  useEffect(() => {
+    if (caseIdFromUrl && !isValidUUID(caseIdFromUrl)) {
+      toast.error("Invalid case ID format in URL");
+    }
+  }, []); // Empty dependency array - only run once
+
+  // Set case ID from URL on mount
+  useEffect(() => {
+    if (caseIdFromUrl && isValidUUID(caseIdFromUrl)) {
+      setFormData(prev => ({
+        ...prev,
+        case_id: caseIdFromUrl
+      }));
+    }
+  }, [caseIdFromUrl]);
+
   useEffect(() => {
     if (!selectedDuration && feesList.length > 0) {
       const firstActiveFee = feesList.find(fee => fee.is_active);
@@ -56,6 +86,20 @@ export default function PatientBookAppointmentPage({ params }) {
       }
     }
   }, [feesList, selectedDuration]);
+
+  const handleCaseChange = (caseId) => {
+    // Prevent case change if case is pre-selected from URL
+    if (caseIdFromUrl) {
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      case_id: caseId,
+      case_title: caseId ? "" : prev.case_title,
+      case_description: caseId ? "" : prev.case_description,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,21 +142,46 @@ export default function PatientBookAppointmentPage({ params }) {
       is_follow_up: false
     };
 
-    console.log("Booking appointment:", appointmentPayload);
+    if (formData.case_id) {
+      appointmentPayload.case_id = formData.case_id;
+    } else {
+      if (formData.case_title?.trim()) {
+        appointmentPayload.case_title = formData.case_title.trim();
+      }
+      if (formData.case_description?.trim()) {
+        appointmentPayload.case_description = formData.case_description.trim();
+      }
+    }
 
     bookAppointment(appointmentPayload, {
       onSuccess: (data) => {
-        console.log("Appointment booked successfully:", data);
         toast.success("Appointment booked successfully!");
         
         setTimeout(() => {
-          router.push("/patient/appointments");
+          if (data.case?.id) {
+            router.push(`/patient/cases/${data.case.id}`);
+          } else {
+            router.push("/patient/appointments");
+          }
         }, 1000);
       },
       onError: (error) => {
-        console.error("Error booking appointment:", error);
-        let errorMessage = "Failed to book appointment. Please try again.";
-        toast.error(error?.errors?.start_time || errorMessage);
+        // Handle specific field errors
+        if (error?.errors) {
+          if (error.errors.case_id) {
+            toast.error(error.errors.case_id);
+          } else if (error.errors.doctor_id) {
+            toast.error(error.errors.doctor_id);
+          } else if (error.errors.start_time) {
+            toast.error(error.errors.start_time);
+          } else if (error.errors.appointment_date) {
+            toast.error(error.errors.appointment_date);
+          } else {
+            toast.error(error.message || "Failed to book appointment. Please try again.");
+          }
+        } else {
+          toast.error(error.message || "Failed to book appointment. Please try again.");
+        }
       }
     });
   };
@@ -123,20 +192,22 @@ export default function PatientBookAppointmentPage({ params }) {
 
   if (profileError) {
     return (
-      <ErrorState 
+      <ErrorBoundary 
         title="Error loading doctor profile"
         message={profileError.message}
         icon="error"
+        onRetry={() => window.location.reload()}
       />
     );
   }
 
   if (!doctor) {
     return (
-      <ErrorState 
+      <ErrorBoundary 
         title="Doctor not found"
         message="The doctor profile you're looking for doesn't exist."
         icon="person_off"
+        showRefresh={false}
       />
     );
   }
@@ -177,10 +248,12 @@ export default function PatientBookAppointmentPage({ params }) {
             selectedDuration={selectedDuration}
             formData={formData}
             isLoading={isBooking}
+            caseIdFromUrl={caseIdFromUrl}
             onDateSelect={setSelectedDate}
             onTimeSlotSelect={setSelectedTimeSlot}
             onDurationChange={setSelectedDuration}
             onFormDataChange={setFormData}
+            onCaseChange={handleCaseChange}
             onSubmit={handleSubmit}
             onCancel={() => router.push(`/patient/find-doctor/${doctorId}`)}
           />

@@ -293,7 +293,7 @@ export default function OrganizationSettingsPage() {
             </>
           ) : (
             <Button onClick={() => setIsEditing(true)}>
-              <span className="material-symbols-outlined text-sm mr-2">edit</span>
+              <span className="material-symbols-outlined text-sm">edit</span>
               Edit Settings
             </Button>
           )}

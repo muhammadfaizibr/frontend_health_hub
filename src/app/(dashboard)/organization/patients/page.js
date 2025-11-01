@@ -187,25 +187,25 @@ export default function OrganizationPatientsPage() {
       
       <div className="flex gap-2 mt-4 pt-4 border-t border-color">
         <Button size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             visibility
           </span>
           View Profile
         </Button>
         <Button variant="outline" size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             calendar_today
           </span>
           Schedule Appointment
         </Button>
         <Button variant="outline" size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             medical_services
           </span>
           Medical Records
         </Button>
         <Button variant="outline" size="sm">
-          <span className="material-symbols-outlined text-sm mr-1">
+          <span className="material-symbols-outlined text-sm">
             message
           </span>
           Message
@@ -225,11 +225,11 @@ export default function OrganizationPatientsPage() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined text-sm mr-2">download</span>
+            <span className="material-symbols-outlined text-sm">download</span>
             Export List
           </Button>
           <Button>
-            <span className="material-symbols-outlined text-sm mr-2">person_add</span>
+            <span className="material-symbols-outlined text-sm">person_add</span>
             Add Patient
           </Button>
         </div>
@@ -265,7 +265,7 @@ export default function OrganizationPatientsPage() {
           />
           
           <Button fullWidth>
-            <span className="material-symbols-outlined text-sm mr-2">filter_list</span>
+            <span className="material-symbols-outlined text-sm">filter_list</span>
             Apply Filters
           </Button>
         </div>

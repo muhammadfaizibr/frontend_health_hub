@@ -9,6 +9,8 @@ import {
   updateProfile,
   deleteProfile,
   getDoctorReviews,
+  getAppointmentReview,
+  createDoctorReview,
 } from '@/lib/api/services/doctor';
 
 const STALE_TIME = {
@@ -156,15 +158,63 @@ export const useDeleteProfile = () => {
   };
 };
 
-export const useDoctorReviews = (profileId, enabled = true) => {
+export const useDoctorReviews = (profileId, appointmentId = null, enabled = true) => {
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['doctorReviews', profileId],
-    queryFn: () => getDoctorReviews(profileId),
+    queryKey: ['doctorReviews', profileId, appointmentId],
+    queryFn: () => getDoctorReviews(profileId, appointmentId),
     enabled: enabled && !!profileId,
     staleTime: STALE_TIME.MEDIUM,
     retry: RETRY_COUNT,
-    placeholderData: [],
+    placeholderData: { results: [] },
   });
 
-  return { reviews: data || [], isLoading, error, refetch };
+  return { 
+    reviews: data?.results || [], 
+    isLoading, 
+    error, 
+    refetch 
+  };
+};
+
+// NEW: Get appointment review
+export const useAppointmentReview = (appointmentId, enabled = true) => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['appointmentReview', appointmentId],
+    queryFn: () => getAppointmentReview(appointmentId),
+    enabled: enabled && !!appointmentId,
+    staleTime: STALE_TIME.MEDIUM,
+    retry: RETRY_COUNT,
+  });
+
+  return { 
+    review: data?.results?.[0] || null, 
+    hasReview: !!data?.results?.[0],
+    isLoading, 
+    error, 
+    refetch 
+  };
+};
+
+// Create doctor review hook
+export const useCreateDoctorReview = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createDoctorReview,
+    onSuccess: (data, variables) => {
+      // Invalidate relevant queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['doctorReviews'] });
+      queryClient.invalidateQueries({ queryKey: ['appointmentReview', variables.appointment_id] });
+      queryClient.invalidateQueries({ queryKey: ['profile', variables.doctor_id] });
+      queryClient.invalidateQueries({ queryKey: ['appointment', variables.appointment_id] });
+    },
+  });
+
+  return {
+    createReview: mutation.mutate,
+    createReviewAsync: mutation.mutateAsync,
+    isCreating: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+  };
 };

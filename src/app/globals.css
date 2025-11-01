@@ -23,7 +23,8 @@
   --background-color: #121611;
   --background-secondary: #131712;
   --surface-color: #1a1f19;
-  --surface-secondary: #242b22;
+  /* --surface-secondary: #242b22; */
+  --surface-secondary: #20261e;
   --surface-color-90: rgba(26, 31, 25, 0.8);
 
   --text-primary: #ffffff;
@@ -176,7 +177,6 @@ h6 { font-size: var(--font-size-base); }
 
 p { 
   font-size: var(--font-size-base); 
-  margin: 0;
 }
 
 button, a{
@@ -1123,10 +1123,6 @@ button, a{
   .button-emergency {
     background-color: var(--error-color);
     color: var(--text-inverse);
-    min-width: 120px;
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: var(--radius-full);
-    font-weight: 700;
   }
 
   .button-emergency:hover {
@@ -1322,7 +1318,6 @@ button, a{
   }
 
   .card {
-    background-color: var(--card-background);
     border-radius: var(--radius-lg);
     padding: var(--spacing-md);
     box-shadow: var(--shadow-md);

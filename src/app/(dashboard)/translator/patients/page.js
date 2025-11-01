@@ -260,13 +260,13 @@ export default function TranslatorPatientsPage() {
 
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="outline" size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   visibility
                 </span>
                 View Details
               </Button>
               <Button size="sm">
-                <span className="material-symbols-outlined text-sm mr-1">
+                <span className="material-symbols-outlined text-sm">
                   message
                 </span>
                 Contact

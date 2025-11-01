@@ -83,11 +83,54 @@ export const deleteProfile = async (profileId) => {
   return data;
 };
 
-export const getDoctorReviews = async (profileId) => {
+export const getDoctorReviews = async (doctorId, appointmentId = null) => {
+  const params = { doctor: doctorId };
+  if (appointmentId) {
+    params.appointment = appointmentId;
+  }
+  
   const data = await apiGet(
-    API_ENDPOINTS.DOCTOR.REVIEWS(profileId),
-    {},
+    API_ENDPOINTS.DOCTOR.REVIEWS,
+    { params },
     'Reviews retrieved successfully'
+  );
+  return data;
+};
+
+export const getAppointmentReview = async (appointmentId) => {
+  const data = await apiGet(
+    API_ENDPOINTS.DOCTOR.REVIEWS, 
+    { params: { appointment: appointmentId } },
+    'Review retrieved successfully'
+  );
+  return data;
+};
+
+// Create doctor review
+export const createDoctorReview = async (reviewData) => {
+  const { doctor_id, appointment_id, rating, comment } = reviewData;
+  const data = await apiPost(
+    `doctors/reviews/?doctor=${doctor_id}`,
+    { appointment_id, rating, comment },
+    'Review submitted successfully'
+  );
+  return data;
+};
+
+export const getPrescriptions = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.DOCTOR.PRESCRIPTIONS,
+    { params: filters },
+    'Prescriptions retrieved successfully'
+  );
+  return data;
+};
+
+export const createPrescription = async (prescriptionData) => {
+  const data = await apiPost(
+    API_ENDPOINTS.DOCTOR.PRESCRIPTIONS,
+    prescriptionData,
+    'Prescription created successfully'
   );
   return data;
 };
@@ -102,6 +145,10 @@ export const doctorService = {
   updateProfile,
   deleteProfile,
   getDoctorReviews,
+  getAppointmentReview,
+  createDoctorReview,
+  getPrescriptions,
+  createPrescription,
 };
 
 export default doctorService;

@@ -17,7 +17,7 @@ export function EmptyState({ icon, title, description, actionLabel, onAction }) 
       </p>
       {actionLabel && onAction && (
         <Button onClick={onAction}>
-          <span className="material-symbols-outlined text-sm mr-2">add</span>
+          <span className="material-symbols-outlined text-sm">add</span>
           {actionLabel}
         </Button>
       )}

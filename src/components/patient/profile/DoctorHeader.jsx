@@ -13,7 +13,7 @@ export default function DoctorHeader({ doctor }) {
 
   return (
     <div className="card bg-surface p-6">
-      <div className="flex items-start gap-6 flex-col sm:flex-row">
+      <div className="flex items-start gap-6 flex-col flex-row">
         <img
           src={doctorImage}
           alt={doctorName}
