@@ -163,7 +163,7 @@ export default function TranslatorProfilePage() {
         <div className="lg:col-span-1">
           <div className="card bg-surface p-6">
             <div className="text-center mb-6">
-              <div className="w-24 h-24 bg-primary/10 rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-24 h-24 bg-primary-alpha-10 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <span className="material-symbols-outlined text-4xl text-primary">
                   person
                 </span>

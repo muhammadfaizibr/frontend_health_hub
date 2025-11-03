@@ -176,7 +176,7 @@ export default function PatientMedicalRecordsPage() {
                       {getTypeIcon(record.type)}
                     </span>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-primary">{record.title}</h3>
+                      <h3 className="font-semibold text-xl text-primary">{record.title}</h3>
                       <p className="text-sm text-secondary">{record.description}</p>
                       <p className="text-xs text-tertiary">{record.date} • {record.doctor}</p>
                     </div>

@@ -1,3 +1,4 @@
+// components/patient/appointments/AppointmentCard.jsx
 "use client";
 
 import React from "react";
@@ -6,11 +7,21 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate, formatTime } from "@/lib/utils/global";
 
-export default function AppointmentCard({ appointment, showActions = false }) {
+export default function AppointmentCard({ 
+  appointment, 
+  showActions = false, 
+  onUpdate,
+  isDoctor = false 
+}) {
   const caseData = appointment.case;
   const timeSlot = appointment.time_slot;
   const doctor = caseData?.doctor?.user;
+  const patient = caseData?.patient?.user;
   const translator = appointment.translator;
+
+  const appointmentLink = isDoctor 
+    ? `/doctor/appointments/${appointment.id}` 
+    : `/patient/appointments/${appointment.id}`;
 
   return (
     <div className="card bg-card-light p-4 hover:shadow-lg transition-shadow">
@@ -20,8 +31,17 @@ export default function AppointmentCard({ appointment, showActions = false }) {
             {caseData?.title || "Untitled Case"}
           </h3>
           <div className="flex items-center gap-2 text-sm text-secondary">
-            <span>Dr. {doctor?.full_name || "Not assigned"}</span>
-            <span>•</span>
+            {isDoctor ? (
+              <>
+                <span>Patient: {patient?.full_name || "N/A"}</span>
+                <span>•</span>
+              </>
+            ) : (
+              <>
+                <span>Dr. {doctor?.full_name || "Not assigned"}</span>
+                <span>•</span>
+              </>
+            )}
             <span>Appointment #{appointment.appointment_number}</span>
           </div>
         </div>
@@ -98,14 +118,14 @@ export default function AppointmentCard({ appointment, showActions = false }) {
       )}
 
       <div className="pt-4 border-t border-color flex flex-wrap gap-2 items-center">
-        <Link href={`/patient/appointments/${appointment.id}`}>
+        <Link href={appointmentLink}>
           <Button variant="outline" size="sm">
             <span className="material-symbols-outlined text-sm">visibility</span>
             View Details
           </Button>
         </Link>
 
-        {showActions && appointment.status === "Confirmed" && (
+        {!isDoctor && showActions && appointment.status === "Confirmed" && (
           <>
             <Link href={`/patient/appointments/${appointment.id}/reschedule`}>
               <Button variant="outline" size="sm">
@@ -128,6 +148,13 @@ export default function AppointmentCard({ appointment, showActions = false }) {
               Join Call
             </Button>
           </>
+        )}
+
+        {isDoctor && appointment.status === "Confirmed" && (
+          <Button size="sm" className="ml-auto">
+            <span className="material-symbols-outlined text-sm">videocam</span>
+            Start Consultation
+          </Button>
         )}
       </div>
     </div>

@@ -168,7 +168,7 @@ export default function PatientHealthTrackingPage() {
                 {healthMetrics.map((metric) => (
                   <div key={metric.id} className="p-4 border border-color rounded-lg">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold text-primary">{metric.type}</h3>
+                      <h3 className="font-semibold text-xl text-primary">{metric.type}</h3>
                       <span className={`material-symbols-outlined text-sm ${getTrendColor(metric.trend)}`}>
                         {getTrendIcon(metric.trend)}
                       </span>
@@ -198,7 +198,7 @@ export default function PatientHealthTrackingPage() {
                       {activity.type === "Exercise" ? "fitness_center" : "bedtime"}
                     </span>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-primary">{activity.activity}</h3>
+                      <h3 className="font-semibold text-xl text-primary">{activity.activity}</h3>
                       <p className="text-sm text-secondary">
                         {activity.duration} • {activity.date}
                       </p>

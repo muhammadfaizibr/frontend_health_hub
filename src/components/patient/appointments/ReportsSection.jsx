@@ -1,3 +1,4 @@
+// components/patient/appointments/ReportsSection.jsx
 "use client";
 
 import React, { useState } from "react";
@@ -8,14 +9,14 @@ import { useDownloadFile } from "@/lib/hooks/useFiles";
 import { useToastContext } from "@/lib/providers/ToastProvider";
 import { formatDate, formatTime } from "@/lib/utils/global";
 
-const EmptyState = ({ icon, title, description, actionLabel, onAction }) => (
+const EmptyState = ({ icon, title, description, actionLabel, onAction, showAction = true }) => (
   <div className="flex flex-col gap-2 text-center py-12 items-center">
-    <span className="material-symbols-outlined text-6xl text-secondary mb-4">
+    <span className="material-symbols-outlined icon-lg text-secondary mb-4">
       {icon}
     </span>
     <h3 className="text-xl font-semibold text-primary mb-2">{title}</h3>
     <p className="text-secondary mb-4">{description}</p>
-    {actionLabel && onAction && (
+    {showAction && actionLabel && onAction && (
       <Button onClick={onAction}>
         <span className="material-symbols-outlined text-sm">add</span>
         {actionLabel}
@@ -67,7 +68,7 @@ const ReportCard = ({ report }) => {
   };
 
   return (
-    <div className="flex flex-col card bg-surface overflow-hidden gap-4">
+    <div className="flex flex-col card bg-card-light overflow-hidden gap-4">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between hover:bg-hover transition-colors"
@@ -100,7 +101,7 @@ const ReportCard = ({ report }) => {
       </button>
 
       {isExpanded && (
-        <div className="pt-4 border-t border-color bg-hover/30">
+        <div className="border-t pt-4 border-color bg-hover/30">
           {report.description && (
             <div className="mb-4">
               <p className="text-sm font-medium text-primary mb-1">Description:</p>
@@ -141,7 +142,8 @@ export default function ReportsSection({
   appointment, 
   reports = [], 
   isLoading, 
-  onUpdate 
+  onUpdate,
+  isDoctor = false 
 }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -175,6 +177,7 @@ export default function ReportsSection({
             description="No medical reports have been uploaded for this appointment."
             actionLabel="Upload First Report"
             onAction={() => setShowCreateModal(true)}
+            showAction={true}
           />
         ) : (
           <div className="space-y-3">

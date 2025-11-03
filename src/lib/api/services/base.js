@@ -289,6 +289,8 @@ export const deleteServiceFee = async (feeId) => {
   return data;
 };
 
+
+
 export const baseService = {
   getLanguages,
   getLanguage,

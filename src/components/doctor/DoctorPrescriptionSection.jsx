@@ -1,8 +1,11 @@
+// components/doctor/DoctorPrescriptionSection.jsx
 "use client";
 
 import React, { useState } from "react";
+import { Button } from "@/components/ui/Button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import EmptyState from "@/components/ui/EmptyState";
+import CreatePrescriptionModal from "@/components/doctor/CreatePrescriptionModal";
 
 const PrescriptionCard = ({ prescription }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -41,7 +44,7 @@ const PrescriptionCard = ({ prescription }) => {
       </button>
 
       {isExpanded && (
-        <div className="pt-4 border-t border-color bg-hover/30">
+        <div className="border-t pt-4 border-color bg-hover/30">
           {prescription.instructions && (
             <div className="mb-4 p-3 bg-info/10 border border-info rounded-lg">
               <p className="text-sm font-medium text-info mb-1">General Instructions:</p>
@@ -102,11 +105,16 @@ const PrescriptionCard = ({ prescription }) => {
   );
 };
 
-export default function PrescriptionsSection({ 
-  appointmentId, 
-  prescriptions, 
-  isLoading 
+export default function DoctorPrescriptionSection({ 
+  appointment, 
+  prescriptions = [], 
+  isLoading, 
+  onUpdate 
 }) {
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const canCreatePrescription = appointment?.status?.toLowerCase() === 'conducted';
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -115,21 +123,78 @@ export default function PrescriptionsSection({
     );
   }
 
-  if (prescriptions.length === 0) {
-    return (
-      <EmptyState
-        icon="medication"
-        title="No prescriptions yet"
-        description="No prescriptions have been issued for this appointment."
-      />
-    );
-  }
+  const prescriptionsList = Array.isArray(prescriptions) ? prescriptions : [];
 
   return (
-    <div className="space-y-4">
-      {prescriptions.map((prescription) => (
-        <PrescriptionCard key={prescription.id} prescription={prescription} />
-      ))}
-    </div>
+    <>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-primary">
+              Prescriptions ({prescriptionsList.length})
+            </h3>
+            <p className="text-sm text-secondary mt-1">
+              Create and manage prescriptions for this appointment
+            </p>
+          </div>
+          {canCreatePrescription && (
+            <Button size="sm" onClick={() => setShowCreateModal(true)}>
+              <span className="material-symbols-outlined text-sm">add</span>
+              Create Prescription
+            </Button>
+          )}
+        </div>
+
+        {!canCreatePrescription && (
+          <div className="bg-info/10 border border-info rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <span className="material-symbols-outlined text-info">
+                info
+              </span>
+              <div>
+                <p className="text-sm font-medium text-info mb-1">
+                  Appointment Not Completed
+                </p>
+                <p className="text-sm text-info/80">
+                  Prescriptions can only be created after the appointment is marked as completed.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {prescriptionsList.length === 0 ? (
+          <EmptyState
+            icon="medication"
+            title="No prescriptions yet"
+            description={
+              canCreatePrescription
+                ? "Create the first prescription for this appointment."
+                : "No prescriptions have been created for this appointment."
+            }
+            actionLabel={canCreatePrescription ? "Create First Prescription" : undefined}
+            onAction={canCreatePrescription ? () => setShowCreateModal(true) : undefined}
+          />
+        ) : (
+          <div className="space-y-3">
+            {prescriptionsList.map((prescription) => (
+              <PrescriptionCard key={prescription.id} prescription={prescription} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {showCreateModal && (
+        <CreatePrescriptionModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          appointment={appointment}
+          onSuccess={() => {
+            setShowCreateModal(false);
+            onUpdate?.();
+          }}
+        />
+      )}
+    </>
   );
 }

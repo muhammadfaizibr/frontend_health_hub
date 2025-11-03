@@ -26,7 +26,7 @@ export const HealthTrackingPage = lazy(() => import('@/app/(dashboard)/patient/h
 export const EmergencyPage = lazy(() => import('@/app/(dashboard)/patient/emergency/page'));
 
 // Lazy load translator sections
-export const TranslatorAssignmentsPage = lazy(() => import('@/app/(dashboard)/translator/assignments/page'));
+export const TranslatorAssignmentsPage = lazy(() => import('@/app/(dashboard)/translator/assignment/page'));
 export const TranslatorSchedulePage = lazy(() => import('@/app/(dashboard)/translator/schedule/page'));
 export const TranslatorPatientsPage = lazy(() => import('@/app/(dashboard)/translator/patients/page'));
 export const TranslatorDocumentsPage = lazy(() => import('@/app/(dashboard)/translator/medical-documents/page'));

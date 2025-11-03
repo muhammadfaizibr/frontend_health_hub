@@ -106,6 +106,52 @@ export const getAppointmentReview = async (appointmentId) => {
   return data;
 };
 
+// Already included in document 9
+export const getDoctorCases = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.PATIENT.CASES,
+    { params: filters },
+    'Cases retrieved successfully'
+  );
+  return data;
+};
+
+export const getDoctorCase = async (caseId) => {
+  const data = await apiGet(
+    `${API_ENDPOINTS.PATIENT.CASES}${caseId}/`,
+    {},
+    'Case retrieved successfully'
+  );
+  return data;
+};
+
+export const getDoctorAppointments = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.PATIENT.APPOINTMENTS,
+    { params: filters },
+    'Appointments retrieved successfully'
+  );
+  return data;
+};
+
+export const getDoctorAppointment = async (appointmentId) => {
+  const data = await apiGet(
+    `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/`,
+    {},
+    'Appointment retrieved successfully'
+  );
+  return data;
+};
+
+export const addPrescriptionItems = async (prescriptionId, items) => {
+  const data = await apiPost(
+    `${API_ENDPOINTS.DOCTOR.PRESCRIPTIONS}${prescriptionId}/add_items/`,
+    { items },
+    'Prescription items added successfully'
+  );
+  return data;
+};
+
 // Create doctor review
 export const createDoctorReview = async (reviewData) => {
   const { doctor_id, appointment_id, rating, comment } = reviewData;
@@ -135,6 +181,9 @@ export const createPrescription = async (prescriptionData) => {
   return data;
 };
 
+
+
+
 export const doctorService = {
   getProfiles,
   searchDoctors,
@@ -149,6 +198,11 @@ export const doctorService = {
   createDoctorReview,
   getPrescriptions,
   createPrescription,
+  getDoctorCases,
+  getDoctorCase,
+  getDoctorAppointments,
+  getDoctorAppointment,
+  addPrescriptionItems,
 };
 
 export default doctorService;

@@ -1,307 +1,201 @@
+// app/translator/languages/page.jsx
 "use client";
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/forms/Input";
-import { Select } from "@/components/forms/Select";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import EmptyState from "@/components/ui/EmptyState";
+import LanguageCard from "@/components/translator/LanguageCard";
+import LanguageModal from "@/components/translator/LanguageModal";
+import { useTranslatorLanguages } from "@/lib/hooks/useTranslator";
 
 export default function TranslatorLanguagesPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [proficiencyFilter, setProficiencyFilter] = useState("");
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
 
-  const languages = [
-    {
-      id: 1,
-      name: "Spanish",
-      code: "es",
-      proficiency: "native",
-      certifications: [
-        "Certified Medical Interpreter (CMI) - Spanish",
-        "Healthcare Interpreter Certificate - Spanish"
-      ],
-      experience: "8 years",
-      totalAssignments: 156,
-      averageRating: 4.8,
-      isActive: true,
-      specialties: ["Cardiology", "General Practice", "Pediatrics"]
-    },
-    {
-      id: 2,
-      name: "French",
-      code: "fr",
-      proficiency: "fluent",
-      certifications: [
-        "Certified Medical Interpreter (CMI) - French"
-      ],
-      experience: "6 years",
-      totalAssignments: 89,
-      averageRating: 4.7,
-      isActive: true,
-      specialties: ["Surgery", "Orthopedics", "Emergency Medicine"]
-    },
-    {
-      id: 3,
-      name: "Hindi",
-      code: "hi",
-      proficiency: "fluent",
-      certifications: [
-        "Healthcare Interpreter Certificate - Hindi"
-      ],
-      experience: "5 years",
-      totalAssignments: 67,
-      averageRating: 4.6,
-      isActive: true,
-      specialties: ["Internal Medicine", "Dermatology", "Psychiatry"]
-    },
-    {
-      id: 4,
-      name: "Arabic",
-      code: "ar",
-      proficiency: "conversational",
-      certifications: [],
-      experience: "3 years",
-      totalAssignments: 34,
-      averageRating: 4.4,
-      isActive: true,
-      specialties: ["General Practice", "Emergency Medicine"]
-    },
-    {
-      id: 5,
-      name: "Mandarin",
-      code: "zh",
-      proficiency: "conversational",
-      certifications: [],
-      experience: "2 years",
-      totalAssignments: 23,
-      averageRating: 4.2,
-      isActive: false,
-      specialties: ["General Practice"]
+  const { languages: languagesData, isLoading, refetch } = useTranslatorLanguages();
+
+  const languages = languagesData?.results || [];
+
+  const handleEditLanguage = (language) => {
+    setSelectedLanguage(language);
+    setShowLanguageModal(true);
+  };
+
+  const handleLanguageModalClose = () => {
+    setShowLanguageModal(false);
+    setSelectedLanguage(null);
+  };
+
+  const handleLanguageSuccess = () => {
+    handleLanguageModalClose();
+    refetch();
+  };
+
+  // Group languages by proficiency level
+  const languagesByProficiency = languages.reduce((acc, lang) => {
+    if (!acc[lang.proficiency_level]) {
+      acc[lang.proficiency_level] = [];
     }
-  ];
+    acc[lang.proficiency_level].push(lang);
+    return acc;
+  }, {});
 
-  const proficiencyOptions = [
-    { value: "", label: "All Proficiency Levels" },
-    { value: "native", label: "Native" },
-    { value: "fluent", label: "Fluent" },
-    { value: "conversational", label: "Conversational" },
-    { value: "basic", label: "Basic" }
-  ];
-
-  const getProficiencyBadge = (proficiency) => {
-    const proficiencyClasses = {
-      native: "badge badge-success",
-      fluent: "badge badge-info",
-      conversational: "badge badge-warning",
-      basic: "badge badge-error"
-    };
-    
-    return proficiencyClasses[proficiency] || "badge badge-secondary";
-  };
-
-  const getRatingStars = (rating) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <span
-        key={i}
-        className={`material-symbols-outlined text-sm ${
-          i < Math.floor(rating) ? 'text-warning' : 'text-secondary'
-        }`}
-      >
-        star
-      </span>
-    ));
-  };
-
-  const filteredLanguages = languages.filter(lang => {
-    const matchesSearch = lang.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         lang.code.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesProficiency = !proficiencyFilter || lang.proficiency === proficiencyFilter;
-    
-    return matchesSearch && matchesProficiency;
-  });
+  const proficiencyOrder = ['native', 'fluent', 'intermediate', 'advanced'];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-primary">Language Management</h1>
-          <p className="text-secondary mt-1">
-            Manage your language skills and certifications
-          </p>
+    <>
+      <div className="flex flex-col gap-6">
+        {/* Header */}
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-primary">Languages</h1>
+            <p className="text-secondary mt-1">
+              Manage the languages you can translate
+            </p>
+          </div>
+          <Button onClick={() => setShowLanguageModal(true)}>
+            <span className="material-symbols-outlined text-sm">add</span>
+            Add Language
+          </Button>
         </div>
-        <Button>
-          <span className="material-symbols-outlined text-sm">add</span>
-          Add Language
-        </Button>
-      </div>
 
-      {/* Filters */}
-      <div className="card bg-surface p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            placeholder="Search languages..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            icon="search"
-          />
-          <Select
-            value={proficiencyFilter}
-            onChange={(e) => setProficiencyFilter(e.target.value)}
-            options={proficiencyOptions}
-            placeholder="Filter by proficiency"
-          />
-        </div>
-      </div>
-
-      {/* Languages List */}
-      <div className="flex flex-col gap-4">
-        {filteredLanguages.map((language) => (
-          <div key={language.id} className="card bg-surface p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl font-semibold text-primary">
-                    {language.name} ({language.code.toUpperCase()})
-                  </h3>
-                  <span className={getProficiencyBadge(language.proficiency)}>
-                    {language.proficiency}
-                  </span>
-                  {language.isActive ? (
-                    <span className="badge badge-success">Active</span>
-                  ) : (
-                    <span className="badge badge-secondary">Inactive</span>
-                  )}
+        {/* Statistics */}
+        {languages.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="card bg-surface p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-secondary mb-1">Total Languages</p>
+                  <p className="text-2xl font-bold text-primary">{languages.length}</p>
                 </div>
-                <p className="text-secondary text-sm mb-2">
-                  Experience: {language.experience} • Assignments: {language.totalAssignments}
-                </p>
-                <div className="flex items-center gap-1 mb-2">
-                  {getRatingStars(language.averageRating)}
-                  <span className="text-xs text-secondary ml-1">
-                    {language.averageRating}/5.0
+                <div className="flex p-3 bg-primary-color/10 rounded-lg">
+                  <span className="material-symbols-outlined text-2xl text-primary-color">
+                    translate
                   </span>
                 </div>
-              </div>
-              <div className="text-right">
-                <Button variant="outline" size="sm" className="mb-2">
-                  <span className="material-symbols-outlined text-sm">
-                    edit
-                  </span>
-                  Edit
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className={language.isActive ? "text-error" : "text-success"}
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    {language.isActive ? "pause" : "play_arrow"}
-                  </span>
-                  {language.isActive ? "Deactivate" : "Activate"}
-                </Button>
               </div>
             </div>
 
-            {/* Certifications */}
-            {language.certifications.length > 0 && (
-              <div className="mb-4">
-                <p className="text-sm font-medium text-primary mb-2">Certifications:</p>
-                <div className="flex flex-col gap-1">
-                  {language.certifications.map((cert, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm">
-                      <span className="material-symbols-outlined text-success text-sm">
+            {proficiencyOrder.map(level => {
+              const count = languagesByProficiency[level]?.length || 0;
+              if (count === 0) return null;
+              
+              return (
+                <div key={level} className="card bg-surface p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-secondary mb-1 capitalize">{level}</p>
+                      <p className="text-2xl font-bold text-primary">{count}</p>
+                    </div>
+                    <div className="flex p-3 bg-success/10 rounded-lg">
+                      <span className="material-symbols-outlined text-2xl text-success">
                         verified
                       </span>
-                      <span className="text-secondary">{cert}</span>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* Specialties */}
-            {language.specialties.length > 0 && (
-              <div className="mb-4">
-                <p className="text-sm font-medium text-primary mb-2">Medical Specialties:</p>
-                <div className="flex flex-wrap gap-1">
-                  {language.specialties.map((specialty, index) => (
-                    <span key={index} className="badge badge-info text-xs">
-                      {specialty}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Performance Stats */}
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-3 bg-surface-secondary rounded-lg">
-                <p className="text-sm text-secondary">Total Assignments</p>
-                <p className="text-lg font-bold text-primary">{language.totalAssignments}</p>
-              </div>
-              <div className="p-3 bg-surface-secondary rounded-lg">
-                <p className="text-sm text-secondary">Average Rating</p>
-                <p className="text-lg font-bold text-primary">{language.averageRating}</p>
-              </div>
-              <div className="p-3 bg-surface-secondary rounded-lg">
-                <p className="text-sm text-secondary">Experience</p>
-                <p className="text-lg font-bold text-primary">{language.experience}</p>
-              </div>
-            </div>
+              );
+            })}
           </div>
-        ))}
+        )}
+
+        {/* Languages List */}
+        <div className="space-y-6">
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <LoadingSpinner />
+            </div>
+          ) : languages.length > 0 ? (
+            proficiencyOrder.map(level => {
+              const levelLanguages = languagesByProficiency[level];
+              if (!levelLanguages || levelLanguages.length === 0) return null;
+
+              return (
+                <div key={level} className="flex flex-col gap-2 space-y-3">
+                  <h2 className="text-xl font-semibold text-primary capitalize">
+                    {level} ({levelLanguages.length})
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {levelLanguages.map(language => (
+                      <LanguageCard
+                        key={language.id}
+                        language={language}
+                        onEdit={handleEditLanguage}
+                        onUpdate={refetch}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <EmptyState
+              icon="translate"
+              title="No languages added"
+              description="Add the languages you can translate to help patients find you."
+              actionLabel="Add First Language"
+              onAction={() => setShowLanguageModal(true)}
+            />
+          )}
+        </div>
+
+        {/* Info Card */}
+{languages.length > 0 && (
+  <div className="flex flex-col gap-4 card bg-surface p-6">
+    <h3 className="text-lg font-semibold text-primary mb-4">
+      Language Proficiency Levels
+    </h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="flex items-start gap-2">
+        <span className="material-symbols-outlined text-primary-color text-sm mt-0.5">
+          check_circle
+        </span>
+        <div>
+          <p className="text-sm font-medium text-primary">Native</p>
+          <p className="text-xs text-secondary">Native or bilingual proficiency</p>
+        </div>
       </div>
-
-      {filteredLanguages.length === 0 && (
-        <div className="text-center py-12">
-          <span className="material-symbols-outlined text-6xl text-secondary mb-4">
-            language
-          </span>
-          <h3 className="text-xl font-semibold text-primary mb-2">
-            No languages found
-          </h3>
-          <p className="text-secondary">
-            Try adjusting your search criteria or add a new language.
-          </p>
+      <div className="flex items-start gap-2">
+        <span className="material-symbols-outlined text-success text-sm mt-0.5">
+          check_circle
+        </span>
+        <div>
+          <p className="text-sm font-medium text-primary">Fluent</p>
+          <p className="text-xs text-secondary">Full professional proficiency</p>
         </div>
-      )}
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card bg-surface p-4 text-center">
-          <span className="material-symbols-outlined text-primary-color text-3xl mb-2">
-            language
-          </span>
-          <p className="text-sm text-secondary">Total Languages</p>
-          <p className="text-2xl font-bold text-primary">{languages.length}</p>
+      </div>
+      <div className="flex items-start gap-2">
+        <span className="material-symbols-outlined text-info text-sm mt-0.5">
+          check_circle
+        </span>
+        <div>
+          <p className="text-sm font-medium text-primary">Advanced</p>
+          <p className="text-xs text-secondary">Professional working proficiency</p>
         </div>
-        <div className="card bg-surface p-4 text-center">
-          <span className="material-symbols-outlined text-success text-3xl mb-2">
-            check_circle
-          </span>
-          <p className="text-sm text-secondary">Active Languages</p>
-          <p className="text-2xl font-bold text-primary">
-            {languages.filter(l => l.isActive).length}
-          </p>
-        </div>
-        <div className="card bg-surface p-4 text-center">
-          <span className="material-symbols-outlined text-info text-3xl mb-2">
-            verified
-          </span>
-          <p className="text-sm text-secondary">Certified Languages</p>
-          <p className="text-2xl font-bold text-primary">
-            {languages.filter(l => l.certifications.length > 0).length}
-          </p>
-        </div>
-        <div className="card bg-surface p-4 text-center">
-          <span className="material-symbols-outlined text-warning text-3xl mb-2">
-            star
-          </span>
-          <p className="text-sm text-secondary">Avg Rating</p>
-          <p className="text-2xl font-bold text-primary">
-            {(languages.reduce((sum, l) => sum + l.averageRating, 0) / languages.length).toFixed(1)}
-          </p>
+      </div>
+      <div className="flex items-start gap-2">
+        <span className="material-symbols-outlined text-warning text-sm mt-0.5">
+          check_circle
+        </span>
+        <div>
+          <p className="text-sm font-medium text-primary">Intermediate</p>
+          <p className="text-xs text-secondary">Limited working proficiency</p>
         </div>
       </div>
     </div>
+  </div>
+)}
+
+      </div>
+
+      {/* Language Modal */}
+      <LanguageModal
+        isOpen={showLanguageModal}
+        onClose={handleLanguageModalClose}
+        language={selectedLanguage}
+        onSuccess={handleLanguageSuccess}
+      />
+    </>
   );
 }

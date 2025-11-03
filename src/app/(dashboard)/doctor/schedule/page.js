@@ -1,4 +1,4 @@
-// app/translator/schedule/page.jsx
+// app/doctor/schedule/page.jsx
 "use client";
 
 import React, { useState } from "react";
@@ -10,17 +10,17 @@ import AvailabilitySlotCard from "@/components/doctor/schedule/AvailabilitySlotC
 import ServiceFeeCard from "@/components/doctor/schedule/ServiceFeeCard";
 import AvailabilitySlotModal from "@/components/doctor/schedule/AvailabilitySlotModal";
 import ServiceFeeModal from "@/components/doctor/schedule/ServiceFeeModal";
-import { useTranslatorAvailability, useTranslatorFees } from "@/lib/hooks/useTranslator";
+import { useMyAvailability, useMyFees } from "@/lib/hooks/useBase";
 
-export default function TranslatorSchedulePage() {
+export default function DoctorSchedulePage() {
   const [activeTab, setActiveTab] = useState("availability");
   const [showSlotModal, setShowSlotModal] = useState(false);
   const [showFeeModal, setShowFeeModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedFee, setSelectedFee] = useState(null);
 
-  const { availability, isLoading: slotsLoading, refetch: refetchSlots } = useTranslatorAvailability();
-  const { fees, isLoading: feesLoading, refetch: refetchFees } = useTranslatorFees();
+  const { availability, isLoading: slotsLoading, refetch: refetchSlots } = useMyAvailability();
+  const { fees, isLoading: feesLoading, refetch: refetchFees } = useMyFees();
 
   const availabilitySlots = availability || [];
   const serviceFees = fees || [];
@@ -83,11 +83,11 @@ export default function TranslatorSchedulePage() {
     <>
       <div className="flex flex-col gap-6">
         {/* Header */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex flex-wrap items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold text-primary">Schedule & Pricing</h1>
             <p className="text-secondary mt-1">
-              Manage your availability and translation fees
+              Manage your availability and consultation fees
             </p>
           </div>
         </div>
@@ -149,7 +149,7 @@ export default function TranslatorSchedulePage() {
               <EmptyState
                 icon="schedule"
                 title="No availability slots"
-                description="Add your available time slots to let patients know when you're available for translation."
+                description="Add your available time slots to let patients book appointments."
                 actionLabel="Add First Time Slot"
                 onAction={() => setShowSlotModal(true)}
               />
@@ -160,13 +160,13 @@ export default function TranslatorSchedulePage() {
         {/* Service Fees Tab */}
         {activeTab === "fees" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-primary">
-                  Translation Fees
+                  Consultation Fees
                 </h2>
                 <p className="text-sm text-secondary mt-1">
-                  Set your fees for different translation session durations
+                  Set your fees for different consultation durations
                 </p>
               </div>
               <Button onClick={() => setShowFeeModal(true)}>
@@ -194,23 +194,22 @@ export default function TranslatorSchedulePage() {
               <EmptyState
                 icon="payments"
                 title="No service fees"
-                description="Add your translation fees for different durations."
+                description="Add your consultation fees for different durations."
                 actionLabel="Add First Fee"
                 onAction={() => setShowFeeModal(true)}
               />
             )}
+
           </div>
         )}
       </div>
 
-      {/* Modals - Using same components as doctor */}
+      {/* Modals */}
       <AvailabilitySlotModal
         isOpen={showSlotModal}
         onClose={handleSlotModalClose}
         slot={selectedSlot}
         onSuccess={handleSlotSuccess}
-        useCreateHook={useTranslatorAvailability}
-        useUpdateHook={useTranslatorAvailability}
       />
 
       <ServiceFeeModal

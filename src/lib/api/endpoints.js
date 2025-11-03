@@ -52,10 +52,13 @@ export const API_ENDPOINTS = {
     SERVICE_FEE: (id) => `base/service-fees/${id}/`,
     MY_FEES: "base/service-fees/my_fees/",
   },
-
+  
   TRANSLATOR: {
-    PROFILE: "translators/profile/",
-    ASSIGNMENTS: "translators/assignments/",
+    PROFILES: 'translators/profiles/',
+    PROFILE: (id) => `translators/profiles/${id}/`,
+    LANGUAGES: 'translators/languages/',
+    LANGUAGE: (id) => `translators/languages/${id}/`,
+    REVIEWS: 'translators/reviews/',
   },
 
   ORGANIZATION: {

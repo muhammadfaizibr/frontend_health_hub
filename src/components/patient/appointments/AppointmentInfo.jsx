@@ -1,15 +1,48 @@
+// components/patient/appointments/AppointmentInfo.jsx
 "use client";
 
 import React from "react";
 import { formatDate, formatTime } from "@/lib/utils/global";
 
-export default function AppointmentInfo({ appointment }) {
+export default function AppointmentInfo({ appointment, isDoctor = false }) {
   const caseData = appointment.case;
   const timeSlot = appointment.time_slot;
   const doctor = caseData?.doctor?.user;
   const doctorProfile = caseData?.doctor;
+  const patient = caseData?.patient?.user;
 
-  const infoItems = [
+  const infoItems = isDoctor ? [
+    {
+      icon: "person",
+      label: "Patient",
+      value: patient?.full_name || "N/A",
+    },
+    {
+      icon: "email",
+      label: "Patient Email",
+      value: patient?.email || "N/A",
+    },
+    {
+      icon: "phone",
+      label: "Patient Phone",
+      value: patient?.phone_number || "N/A",
+    },
+    {
+      icon: "folder",
+      label: "Case",
+      value: caseData?.title || "Untitled Case",
+    },
+    {
+      icon: "calendar_today",
+      label: "Date",
+      value: formatDate(timeSlot?.date),
+    },
+    {
+      icon: "schedule",
+      label: "Time",
+      value: `${formatTime(timeSlot?.start_time)} - ${formatTime(timeSlot?.end_time)}`,
+    },
+  ] : [
     {
       icon: "person",
       label: "Doctor",

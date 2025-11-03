@@ -1,3 +1,4 @@
+// components/patient/appointments/AppointmentDetailHeader.jsx
 "use client";
 
 import React, { useState } from "react";
@@ -8,12 +9,16 @@ import { useCancelAppointment } from "@/lib/hooks/usePatients";
 import { formatDate, formatTime } from "@/lib/utils/global";
 import { Modal } from "@/components/ui/Modal";
 
-export default function AppointmentDetailHeader({ appointment, onUpdate }) {
+export default function AppointmentDetailHeader({ 
+  appointment, 
+  onUpdate, 
+  isDoctor = false 
+}) {
   const { addToast } = useToastContext();
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const cancelAppointmentMutation = useCancelAppointment();
 
-  const canCancel = ['pending_confirmation', 'confirmed'].includes(
+  const canCancel = !isDoctor && ['pending_confirmation', 'confirmed'].includes(
     appointment.status?.toLowerCase()
   );
 
@@ -35,6 +40,7 @@ export default function AppointmentDetailHeader({ appointment, onUpdate }) {
   const caseData = appointment.case;
   const timeSlot = appointment.time_slot;
   const doctor = caseData?.doctor?.user;
+  const patient = caseData?.patient?.user;
 
   return (
     <div className="card bg-surface p-4">
@@ -53,8 +59,17 @@ export default function AppointmentDetailHeader({ appointment, onUpdate }) {
           </div>
 
           <div className="flex items-center gap-2 text-sm text-secondary">
-            <span>Dr. {doctor?.full_name || "Not assigned"}</span>
-            <span>•</span>
+            {isDoctor ? (
+              <>
+                <span>Patient: {patient?.full_name || "N/A"}</span>
+                <span>•</span>
+              </>
+            ) : (
+              <>
+                <span>Dr. {doctor?.full_name || "Not assigned"}</span>
+                <span>•</span>
+              </>
+            )}
             <span>Appointment #{appointment.appointment_number}</span>
           </div>
           
@@ -134,57 +149,58 @@ export default function AppointmentDetailHeader({ appointment, onUpdate }) {
         </div>
       </div>
 
-      {/* Cancellation Confirmation Modal */}
-      <Modal
-        isOpen={showCancelConfirm}
-        onClose={() => setShowCancelConfirm(false)}
-        title="Cancel Appointment"
-        size="sm"
-      >
-        <div className="space-y-6">
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0">
-              <span className="material-symbols-outlined text-error text-2xl">warning</span>
+      {!isDoctor && (
+        <Modal
+          isOpen={showCancelConfirm}
+          onClose={() => setShowCancelConfirm(false)}
+          title="Cancel Appointment"
+          size="sm"
+        >
+          <div className="space-y-6">
+            <div className="flex items-start gap-3">
+              <div className="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0">
+                <span className="material-symbols-outlined text-error text-2xl">warning</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-primary font-semibold mb-2">
+                  Are you sure you want to cancel this appointment?
+                </p>
+                <p className="text-sm text-secondary leading-relaxed">
+                  This action cannot be undone. The patient and doctor will be notified of the cancellation.
+                </p>
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="text-primary font-semibold mb-2">
-                Are you sure you want to cancel this appointment?
-              </p>
-              <p className="text-sm text-secondary leading-relaxed">
-                This action cannot be undone. The patient and doctor will be notified of the cancellation.
-              </p>
-            </div>
-          </div>
 
-          <div className="bg-surface-secondary rounded-lg p-4 border border-color">
-            <div className="font-semibold text-primary mb-2">
-              {caseData?.title || "Untitled Case"}
+            <div className="bg-surface-secondary rounded-lg p-4 border border-color">
+              <div className="font-semibold text-primary mb-2">
+                {caseData?.title || "Untitled Case"}
+              </div>
+              <div className="text-sm text-secondary flex items-center gap-2">
+                <span className="material-symbols-outlined text-base">schedule</span>
+                <span>{formatDate(timeSlot?.date)} at {formatTime(timeSlot?.start_time)}</span>
+              </div>
             </div>
-            <div className="text-sm text-secondary flex items-center gap-2">
-              <span className="material-symbols-outlined text-base">schedule</span>
-              <span>{formatDate(timeSlot?.date)} at {formatTime(timeSlot?.start_time)}</span>
-            </div>
-          </div>
 
-          <div className="flex gap-3 justify-end pt-2">
-            <Button 
-              variant="outline"
-              onClick={() => setShowCancelConfirm(false)}
-              disabled={cancelAppointmentMutation.isPending}
-            >
-              Keep Appointment
-            </Button>
-            <Button 
-              variant="emergency"
-              onClick={handleCancelConfirm}
-              isLoading={cancelAppointmentMutation.isPending}
-            >
-              <span className="material-symbols-outlined text-base">cancel</span>
-              Yes, Cancel
-            </Button>
+            <div className="flex gap-3 justify-end pt-2">
+              <Button 
+                variant="outline"
+                onClick={() => setShowCancelConfirm(false)}
+                disabled={cancelAppointmentMutation.isPending}
+              >
+                Keep Appointment
+              </Button>
+              <Button 
+                variant="emergency"
+                onClick={handleCancelConfirm}
+                isLoading={cancelAppointmentMutation.isPending}
+              >
+                <span className="material-symbols-outlined text-base">cancel</span>
+                Yes, Cancel
+              </Button>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </div>
   );
 }

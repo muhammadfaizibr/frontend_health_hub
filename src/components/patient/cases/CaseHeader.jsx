@@ -1,3 +1,4 @@
+// components/patient/cases/CaseHeader.jsx
 "use client";
 
 import React, { useState } from "react";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import EditCaseModal from "./EditCaseModal";
 
-export default function CaseHeader({ caseData, onUpdate }) {
+export default function CaseHeader({ caseData, onUpdate, isDoctor = false }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const formatDate = (dateString) => {
@@ -35,26 +36,44 @@ export default function CaseHeader({ caseData, onUpdate }) {
             <p className="text-secondary">{caseData.description}</p>
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => setIsEditModalOpen(true)}>
-            <span className="material-symbols-outlined text-sm">edit</span>
-            Edit Case
-          </Button>
+          {!isDoctor && (
+            <Button variant="outline" size="sm" onClick={() => setIsEditModalOpen(true)}>
+              <span className="material-symbols-outlined text-sm">edit</span>
+              Edit Case
+            </Button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary-color/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary-color text-base">
-                person
-              </span>
+          {isDoctor ? (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary-color/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary-color text-base">
+                  person
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-secondary">Patient</p>
+                <p className="font-medium text-primary">
+                  {caseData.patient?.user?.full_name || "N/A"}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-secondary">Assigned Doctor</p>
-              <p className="font-medium text-primary">
-                {caseData.doctor?.user?.full_name || "Not assigned"}
-              </p>
+          ) : (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary-color/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary-color text-base">
+                  person
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-secondary">Assigned Doctor</p>
+                <p className="font-medium text-primary">
+                  {caseData.doctor?.user?.full_name || "Not assigned"}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary-color/10 flex items-center justify-center">
@@ -94,12 +113,14 @@ export default function CaseHeader({ caseData, onUpdate }) {
         </div>
       </div>
 
-      <EditCaseModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        caseData={caseData}
-        onUpdate={onUpdate}
-      />
+      {!isDoctor && (
+        <EditCaseModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          caseData={caseData}
+          onUpdate={onUpdate}
+        />
+      )}
     </>
   );
 }
