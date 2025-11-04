@@ -7,16 +7,48 @@ import {
   deleteCase,
   getAppointments, 
   getAppointment,
+  joinAppointment,
   bookAppointment,
   cancelAppointment,
   getReports,
   getPrescriptions,
   createReport,
-  createReview
+  createReview,
+  updatePatientProfile,
+  getProfile
 } from '@/lib/api/services/patient';
 
 const STALE_TIME = 2 * 60 * 1000;
 const RETRY_COUNT = 1;
+
+
+export const usePatientProfile = () => {
+  return useQuery({
+    queryKey: ['patientProfile'],
+    queryFn: getProfile,
+    staleTime: STALE_TIME,
+  });
+};
+
+export const useUpdatePatientProfile = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: updatePatientProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['patientProfile'] });
+    },
+  });
+
+  return {
+    updateProfile: mutation.mutate,
+    updateProfileAsync: mutation.mutateAsync,
+    isUpdating: mutation.isPending,
+    error: mutation.error,
+    isSuccess: mutation.isSuccess,
+  };
+};
+
 
 export const useCases = (filters = {}) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -28,6 +60,7 @@ export const useCases = (filters = {}) => {
 
   return { cases: data, isLoading, error, refetch };
 };
+
 
 export const useCase = (caseId) => {
   const { data, isLoading, error, refetch } = useQuery({
@@ -96,6 +129,19 @@ export const useAppointment = (appointmentId) => {
   });
 
   return { appointment: data, isLoading, error, refetch };
+};
+
+export const useJoinAppointment = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ appointmentId, participantType }) => 
+      joinAppointment(appointmentId, participantType),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['appointment', variables.appointmentId] });
+      queryClient.invalidateQueries({ queryKey: ['appointments'] });
+    },
+  });
 };
 
 export const useBookAppointment = () => {

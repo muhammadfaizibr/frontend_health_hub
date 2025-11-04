@@ -183,14 +183,12 @@ export default function DoctorAppointmentsPage() {
       <div className="flex flex-col gap-4">
         {filteredAppointments.length > 0 ? (
           filteredAppointments.map(appointment => (
-            <Link key={appointment.id} href={`/doctor/appointments/${appointment.id}`}>
               <AppointmentCard
                 appointment={appointment}
                 showActions={false}
                 onUpdate={refetch}
                 isDoctor={true}
               />
-            </Link>
           ))
         ) : (
           <EmptyState

@@ -1,27 +1,96 @@
 // components/patient/appointments/AppointmentCard.jsx
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { formatDate, formatTime } from "@/lib/utils/global";
+import { useJoinAppointment } from "@/lib/hooks/usePatients";
+import { toast } from "react-hot-toast";
 
 export default function AppointmentCard({ 
   appointment, 
   showActions = false, 
   onUpdate,
-  isDoctor = false 
+  isDoctor = false,
+  isTranslator = false
 }) {
   const caseData = appointment.case;
   const timeSlot = appointment.time_slot;
   const doctor = caseData?.doctor?.user;
   const patient = caseData?.patient?.user;
   const translator = appointment.translator;
+  const [isJoinEnabled, setIsJoinEnabled] = useState(appointment.is_join_enabled);
+
+  const { mutateAsync: joinAppointment, isPending: isJoining } = useJoinAppointment();
 
   const appointmentLink = isDoctor 
     ? `/doctor/appointments/${appointment.id}` 
+    : isTranslator
+    ? `/translator/appointments/${appointment.id}`
     : `/patient/appointments/${appointment.id}`;
+
+  // Check join button status every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsJoinEnabled(checkJoinEnabled());
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, [appointment]);
+
+  const checkJoinEnabled = () => {
+    if (!timeSlot) return false;
+    
+    const appointmentDate = new Date(`${timeSlot.date}T${timeSlot.start_time}`);
+    const now = new Date();
+    const enableTime = new Date(appointmentDate.getTime() - 5 * 60000); // 5 mins before
+    const disableTime = new Date(appointmentDate.getTime() + 10 * 60000); // 10 mins after
+    
+    return enableTime <= now && now <= disableTime;
+  };
+
+const handleJoinCall = async () => {
+  console.log('test ')
+  console.log('appointment.id', appointment.id)
+  try {
+    let participantType = 'patient';
+    if (isDoctor) participantType = 'doctor';
+    else if (isTranslator) participantType = 'translator';
+
+    // Pass as an object matching the mutationFn parameters
+    await joinAppointment({ 
+      appointmentId: appointment.id, 
+      participantType 
+    });
+
+    // Open meeting link in new tab
+    window.open(appointment.meeting_link, '_blank');
+    
+    toast.success('Joined appointment successfully');
+    onUpdate?.();
+  } catch (error) {
+    console.log(error)
+    toast.error(error.message || 'Failed to join appointment');
+  }
+};
+
+  const getJoinedStatus = () => {
+    const statuses = [];
+    if (appointment.patient_joined) statuses.push('Patient joined');
+    if (appointment.doctor_joined) statuses.push('Doctor joined');
+    if (appointment.translator_joined && appointment.is_translator_required) {
+      statuses.push('Translator joined');
+    }
+    return statuses.length > 0 ? statuses.join(', ') : null;
+  };
+
+  const hasUserJoined = () => {
+    if (isDoctor) return appointment.doctor_joined;
+    if (isTranslator) return appointment.translator_joined;
+    return appointment.patient_joined;
+  };
 
   return (
     <div className="card bg-card-light p-4 hover:shadow-lg transition-shadow">
@@ -36,6 +105,13 @@ export default function AppointmentCard({
                 <span>Patient: {patient?.full_name || "N/A"}</span>
                 <span>•</span>
               </>
+            ) : isTranslator ? (
+              <>
+                <span>Patient: {patient?.full_name || "N/A"}</span>
+                <span>•</span>
+                <span>Dr. {doctor?.full_name || "Not assigned"}</span>
+                <span>•</span>
+              </>
             ) : (
               <>
                 <span>Dr. {doctor?.full_name || "Not assigned"}</span>
@@ -48,7 +124,7 @@ export default function AppointmentCard({
 
         <div className="text-right flex flex-col items-end gap-1">
           <Badge variant={appointment.status}>
-            {appointment.status_display}
+            {appointment.join_status_display || appointment.status_display}
           </Badge>
           <Badge variant={caseData?.status} size="sm">
             {caseData?.status}
@@ -99,7 +175,16 @@ export default function AppointmentCard({
         </div>
       )}
 
-      {appointment.status === "Cancelled" && appointment.cancelled_by && (
+      {getJoinedStatus() && (
+        <div className="bg-success/10 text-success rounded px-3 py-2 text-sm mb-3">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base">check_circle</span>
+            <span>{getJoinedStatus()}</span>
+          </div>
+        </div>
+      )}
+
+      {appointment.status === "cancelled" && appointment.cancelled_by && (
         <div className="bg-error/10 rounded p-3 text-sm mb-3">
           <div className="font-medium text-error mb-1">
             Cancelled by {appointment.cancelled_by.full_name}
@@ -125,7 +210,7 @@ export default function AppointmentCard({
           </Button>
         </Link>
 
-        {!isDoctor && showActions && appointment.status === "Confirmed" && (
+        {!isDoctor && !isTranslator && showActions && appointment.status === "confirmed" && (
           <>
             <Link href={`/patient/appointments/${appointment.id}/reschedule`}>
               <Button variant="outline" size="sm">
@@ -142,18 +227,32 @@ export default function AppointmentCard({
               <span className="material-symbols-outlined text-sm">cancel</span>
               Cancel
             </Button>
-
-            <Button size="sm" className="ml-auto">
-              <span className="material-symbols-outlined text-sm">videocam</span>
-              Join Call
-            </Button>
           </>
         )}
 
-        {isDoctor && appointment.status === "Confirmed" && (
-          <Button size="sm" className="ml-auto">
-            <span className="material-symbols-outlined text-sm">videocam</span>
-            Start Consultation
+        {(appointment.status === "confirmed" || appointment.status === "in_progress") && (
+          <Button 
+            size="sm" 
+            className="ml-auto"
+            disabled={!isJoinEnabled || hasUserJoined() || isJoining}
+            onClick={handleJoinCall}
+          >
+            {isJoining ? (
+              <>
+                <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
+                Joining...
+              </>
+            ) : hasUserJoined() ? (
+              <>
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                Joined
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-sm">videocam</span>
+                Join Call
+              </>
+            )}
           </Button>
         )}
       </div>

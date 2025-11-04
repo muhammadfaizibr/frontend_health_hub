@@ -1,40 +1,53 @@
-// app/(translator)/translator/profile/page.jsx
+// app/(doctor)/doctor/profile/page.jsx
 "use client";
 
 import React, { useState } from "react";
 import { useAuthStore } from "@/lib/store/auth-store";
-import {
-  useTranslatorProfile,
-  useTranslatorLanguages,
-  useTranslatorAvailability,
-  useTranslatorFees
-} from "@/lib/hooks/useTranslator";
+import { useMyProfile } from "@/lib/hooks/useDoctors";
+import { 
+  useEducation, 
+  useExperience, 
+  useCertifications,
+  useMyAvailability,
+  useMyFees 
+} from "@/lib/hooks/useBase";
 import ProfileSection from "@/components/profile/ProfileSection";
 import ProfileInfoRow from "@/components/profile/ProfileInfoRow";
 import ListItemCard from "@/components/profile/ListItemCard";
 import EmptyState from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/Button";
-import TranslatorBasicInfoModal from "@/components/translator/modals/TranslatorBasicInfoModal";
-import LanguageModal from "@/components/translator/modals/LanguageModal";
-import AvailabilityModal from "@/components/translator/modals/AvailabilityModal";
-import ServiceFeeModal from "@/components/translator/modals/ServiceFeeModal";
+import BasicInfoModal from "@/components/doctor/modals/BasicInfoModal";
+import EducationModal from "@/components/doctor/modals/EducationModal";
+import ExperienceModal from "@/components/doctor/modals/ExperienceModal";
+import CertificationModal from "@/components/doctor/modals/CertificationModal";
+import AvailabilityModal from "@/components/doctor/modals/AvailabilityModal";
+import ServiceFeeModal from "@/components/doctor/modals/ServiceFeeModal";
 
-export default function TranslatorProfilePage() {
+export default function DoctorProfilePage() {
   const user = useAuthStore((state) => state.user);
-  const { profile, isLoading: profileLoading } = useTranslatorProfile();
-  const { languages, isLoading: languagesLoading } = useTranslatorLanguages();
-  const { availability, isLoading: availabilityLoading } = useTranslatorAvailability();
-  const { fees, isLoading: feesLoading } = useTranslatorFees();
+  const { profile, isLoading: profileLoading } = useMyProfile();
+  const { education, isLoading: educationLoading } = useEducation();
+  const { experience, isLoading: experienceLoading } = useExperience();
+  const { certifications, isLoading: certificationsLoading } = useCertifications();
+  const { availability, isLoading: availabilityLoading } = useMyAvailability();
+  const { fees, isLoading: feesLoading } = useMyFees();
+
+  console.log(experience, 'experience')
+
 
   const [modals, setModals] = useState({
     basicInfo: false,
-    language: false,
+    education: false,
+    experience: false,
+    certification: false,
     availability: false,
     serviceFee: false
   });
 
   const [selectedItems, setSelectedItems] = useState({
-    language: null,
+    education: null,
+    experience: null,
+    certification: null,
     availability: null,
     serviceFee: null
   });
@@ -49,6 +62,14 @@ export default function TranslatorProfilePage() {
   const closeModal = (modalName) => {
     setModals(prev => ({ ...prev, [modalName]: false }));
     setSelectedItems(prev => ({ ...prev, [modalName]: null }));
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Present";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short"
+    });
   };
 
   const getDayName = (dayNum) => {
@@ -80,7 +101,7 @@ export default function TranslatorProfilePage() {
     <div className="space-y-6 pb-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Translator Profile</h1>
+          <h1 className="text-3xl font-bold text-primary">Doctor Profile</h1>
           <p className="text-secondary mt-1">Manage your professional information</p>
         </div>
         {profile?.is_verified && (
@@ -109,7 +130,7 @@ export default function TranslatorProfilePage() {
         <div className="space-y-1">
           <ProfileInfoRow
             label="Full Name"
-            value={`${user?.first_name} ${user?.last_name}`}
+            value={`Dr. ${user?.first_name} ${user?.last_name}`}
             icon="badge"
           />
           <ProfileInfoRow
@@ -128,14 +149,29 @@ export default function TranslatorProfilePage() {
             icon="wc"
           />
           <ProfileInfoRow
-            label="Area of Focus"
-            value={profile?.area_of_focus}
-            icon="work"
+            label="Category"
+            value={profile?.category?.replace(/_/g, " ")}
+            icon="category"
           />
           <ProfileInfoRow
-            label="Currency"
-            value={profile?.currency}
-            icon="payments"
+            label="Specialization"
+            value={profile?.specialization}
+            icon="medical_services"
+          />
+          <ProfileInfoRow
+            label="Years of Experience"
+            value={`${profile?.years_of_experience || 0} years`}
+            icon="work_history"
+          />
+          <ProfileInfoRow
+            label="License Number"
+            value={profile?.license_number}
+            icon="card_membership"
+          />
+          <ProfileInfoRow
+            label="Location"
+            value={profile?.location}
+            icon="location_on"
           />
           {profile?.about && (
             <ProfileInfoRow
@@ -147,68 +183,160 @@ export default function TranslatorProfilePage() {
         </div>
       </ProfileSection>
 
-      {/* Languages */}
+      {/* Education */}
       <ProfileSection
-        title="Languages"
-        icon="translate"
+        title="Education"
+        icon="school"
         action={
           <Button
             variant="outline"
             size="sm"
             icon="add"
-            onClick={() => openModal('language')}
+            onClick={() => openModal('education')}
           >
-            Add Language
+            Add Education
           </Button>
         }
       >
-        {languagesLoading ? (
+        {educationLoading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color mx-auto"></div>
           </div>
-        ) : languages && languages.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {languages.map((lang) => (
-              <div key={lang.id} className="card">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-primary-color">translate</span>
-                    <div>
-                      <h3 className="font-semibold text-primary">{lang.language_name}</h3>
-                      <p className="text-sm text-secondary">{lang.language_code}</p>
-                      <p className="text-sm text-secondary mt-1">Proficiency: {lang.proficiency_level}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      icon="edit"
-                      onClick={() => openModal('language', lang)}
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      icon="delete"
-                      className="text-error hover:text-error"
-                      onClick={() => {
-                        if (confirm("Are you sure you want to delete this language?")) {
-                          // Handle delete
-                        }
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
+        ) : education && education?.results?.length > 0 ? (
+          <div className="space-y-3">
+            {education?.results?.map((edu) => (
+              <ListItemCard
+                key={edu.id}
+                icon="school"
+                title={`${edu.degree} in ${edu.field}`}
+                subtitle={edu.school}
+                details={[
+                  `${formatDate(edu.start_date)} - ${formatDate(edu.end_date)}`,
+                  edu.grade && `Grade: ${edu.grade}`,
+                  edu.description
+                ].filter(Boolean)}
+                onEdit={() => openModal('education', edu)}
+                onDelete={() => {
+                  if (confirm("Are you sure you want to delete this education record?")) {
+                    // Handle delete
+                  }
+                }}
+              />
             ))}
           </div>
         ) : (
           <EmptyState
-            icon="translate"
-            title="No languages added"
-            description="Add languages you can translate to expand your opportunities."
-            actionLabel="Add Language"
-            onAction={() => openModal('language')}
+            icon="school"
+            title="No education records"
+            description="Add your educational background to showcase your qualifications."
+            actionLabel="Add Education"
+            onAction={() => openModal('education')}
+          />
+        )}
+      </ProfileSection>
+
+      {/* Experience */}
+      <ProfileSection
+        title="Work Experience"
+        icon="work"
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            icon="add"
+            onClick={() => openModal('experience')}
+          >
+            Add Experience
+          </Button>
+        }
+      >
+        {experienceLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color mx-auto"></div>
+          </div>
+        ) : experience && experience?.results?.length > 0 ? (
+          <div className="space-y-3">
+            {experience?.results?.map((exp) => (
+              <ListItemCard
+                key={exp.id}
+                icon="work"
+                title={exp.title}
+                subtitle={exp.company_or_organization}
+                details={[
+                  `${formatDate(exp.start_date)} - ${formatDate(exp.end_date)}`,
+                  exp.employment_type?.replace(/_/g, " ").toUpperCase(),
+                  exp.location,
+                  exp.description
+                ].filter(Boolean)}
+                onEdit={() => openModal('experience', exp)}
+                onDelete={() => {
+                  if (confirm("Are you sure you want to delete this experience?")) {
+                    // Handle delete
+                  }
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon="work"
+            title="No work experience"
+            description="Add your professional experience to build credibility."
+            actionLabel="Add Experience"
+            onAction={() => openModal('experience')}
+          />
+        )}
+      </ProfileSection>
+
+      {/* Certifications */}
+      <ProfileSection
+        title="Certifications & Licenses"
+        icon="verified"
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            icon="add"
+            onClick={() => openModal('certification')}
+          >
+            Add Certification
+          </Button>
+        }
+      >
+        {certificationsLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-color mx-auto"></div>
+          </div>
+        ) : certifications && certifications?.results?.length > 0 ? (
+          <div className="space-y-3">
+            {certifications?.results?.map((cert) => (
+              <ListItemCard
+                key={cert.id}
+                icon="verified"
+                title={cert.title}
+                subtitle={cert.issuing_organization}
+                details={[
+                  `Issued: ${formatDate(cert.issue_date)}`,
+                  cert.expiration_date && `Expires: ${formatDate(cert.expiration_date)}`,
+                  cert.credential_id && `ID: ${cert.credential_id}`,
+                  cert.description
+                ].filter(Boolean)}
+                onEdit={() => openModal('certification', cert)}
+                onDelete={() => {
+                  if (confirm("Are you sure you want to delete this certification?")) {
+                    // Handle delete
+                  }
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon="verified"
+            title="No certifications"
+            description="Add your professional certifications and licenses."
+            actionLabel="Add Certification"
+            onAction={() => openModal('certification')}
           />
         )}
       </ProfileSection>
@@ -240,7 +368,9 @@ export default function TranslatorProfilePage() {
                 icon="schedule"
                 title={getDayName(slot.day_of_week)}
                 subtitle={`${formatTime(slot.start_time)} - ${formatTime(slot.end_time)}`}
-                details={[slot.is_active ? "Active" : "Inactive"]}
+                details={[
+                  slot.is_active ? "Active" : "Inactive"
+                ]}
                 onEdit={() => openModal('availability', slot)}
                 onDelete={() => {
                   if (confirm("Are you sure you want to delete this availability slot?")) {
@@ -254,7 +384,7 @@ export default function TranslatorProfilePage() {
           <EmptyState
             icon="schedule"
             title="No availability slots"
-            description="Set your weekly availability for translation assignments."
+            description="Set your weekly availability for appointments."
             actionLabel="Add Availability"
             onAction={() => openModal('availability')}
           />
@@ -322,7 +452,7 @@ export default function TranslatorProfilePage() {
           <EmptyState
             icon="payments"
             title="No service fees"
-            description="Set your translation fees for different durations."
+            description="Set your consultation fees for different durations."
             actionLabel="Add Fee"
             onAction={() => openModal('serviceFee')}
           />
@@ -330,17 +460,29 @@ export default function TranslatorProfilePage() {
       </ProfileSection>
 
       {/* Modals */}
-      <TranslatorBasicInfoModal
+      <BasicInfoModal
         isOpen={modals.basicInfo}
         onClose={() => closeModal('basicInfo')}
         user={user}
         profile={profile}
       />
 
-      <LanguageModal
-        isOpen={modals.language}
-        onClose={() => closeModal('language')}
-        language={selectedItems.language}
+      <EducationModal
+        isOpen={modals.education}
+        onClose={() => closeModal('education')}
+        education={selectedItems.education}
+      />
+
+      <ExperienceModal
+        isOpen={modals.experience}
+        onClose={() => closeModal('experience')}
+        experience={selectedItems.experience}
+      />
+
+      <CertificationModal
+        isOpen={modals.certification}
+        onClose={() => closeModal('certification')}
+        certification={selectedItems.certification}
       />
 
       <AvailabilityModal

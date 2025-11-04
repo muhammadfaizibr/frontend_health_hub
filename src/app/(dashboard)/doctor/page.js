@@ -174,7 +174,7 @@ export default function DoctorDashboardPage() {
               })
               .slice(0, 6)
               .map(appointment => (
-                <Link key={appointment.id} href={`/doctor/appointments/${appointment.id}`}>
+                
                   <div className="p-4 border border-color rounded-lg hover:bg-hover transition-colors cursor-pointer">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -200,7 +200,6 @@ export default function DoctorDashboardPage() {
                       </span>
                     </div>
                   </div>
-                </Link>
               ))}
             
             {allAppointments.filter(a => {

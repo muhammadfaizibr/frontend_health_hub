@@ -10,6 +10,28 @@ export const getProfile = async () => {
   return data;
 };
 
+export const updatePatientProfile = async (profileData) => {
+  const data = await apiPut(
+    API_ENDPOINTS.PATIENT.PROFILE,
+    profileData,
+    'Profile updated successfully'
+  );
+  return data;
+};
+
+export const createAppointment = async (appointmentData) => {
+  return bookAppointment(appointmentData);
+};
+
+export const getCases = async (filters = {}) => {
+  const data = await apiGet(
+    API_ENDPOINTS.PATIENT.CASES,
+    { params: filters },
+    'Cases retrieved successfully'
+  );
+  return data;
+};
+
 export const getAppointments = async (filters = {}) => {
   const data = await apiGet(
     API_ENDPOINTS.PATIENT.APPOINTMENTS,
@@ -37,27 +59,35 @@ export const bookAppointment = async (appointmentData) => {
   return data;
 };
 
-export const cancelAppointment = async (appointmentId) => {
+export const joinAppointment = async (appointmentId, participantType) => {
+  console.log(appointmentId, 'appointmentId')
+  const data = await apiPost(
+    `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/join/`,
+    { participant_type: participantType },
+    'Joined appointment successfully'
+  );
+  return data;
+};
+
+export const cancelAppointment = async (appointmentId, reason) => {
   const data = await apiPost(
     `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/cancel/`,
-    {},
+    { cancellation_reason: reason },
     'Appointment cancelled successfully'
   );
   return data;
 };
 
-export const createAppointment = async (appointmentData) => {
-  return bookAppointment(appointmentData);
-};
-
-export const getCases = async (filters = {}) => {
-  const data = await apiGet(
-    API_ENDPOINTS.PATIENT.CASES,
-    { params: filters },
-    'Cases retrieved successfully'
+export const confirmAppointment = async (appointmentId) => {
+  const data = await apiPost(
+    `${API_ENDPOINTS.PATIENT.APPOINTMENTS}${appointmentId}/confirm/`,
+    {},
+    'Appointment confirmed successfully'
   );
   return data;
 };
+
+
 
 export const getCase = async (caseId) => {
   const data = await apiGet(

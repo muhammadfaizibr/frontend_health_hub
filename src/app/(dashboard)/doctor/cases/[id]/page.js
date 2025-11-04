@@ -115,14 +115,13 @@ export default function DoctorCaseDetailPage({ params }) {
             <LoadingSpinner />
           ) : filteredAppointments.length > 0 ? (
             filteredAppointments.map(appointment => (
-              <Link key={appointment.id} href={`/doctor/appointments/${appointment.id}`}>
+              
                 <AppointmentCard
                   appointment={appointment}
                   showActions={false}
                   onUpdate={refetchAppointments}
                   isDoctor={true}
                 />
-              </Link>
             ))
           ) : (
             <EmptyState

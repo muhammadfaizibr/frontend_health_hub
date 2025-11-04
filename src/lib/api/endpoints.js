@@ -62,8 +62,21 @@ export const API_ENDPOINTS = {
   },
 
   ORGANIZATION: {
-    PROFILE: "organizations/profile/",
+    PROFILE: "organizations/profiles/",
     MEMBERS: "organizations/members/",
+    CREDIT_PACKAGES: "organizations/credit-packages/",
+    CREDITS_LEDGER: "organizations/credits-ledger/",
+    PACKAGE_PURCHASES: "organizations/package-purchases/",
+  },
+
+  BILLING: {
+    PAYMENT_METHODS: "payments/payment-methods/",
+    TRANSACTIONS: "payments/transactions/",
+    REFUNDS: "payments/refunds/",
+    BILLINGS: "payments/billings/",
+    WALLET_LEDGER: "payments/wallet-ledger/",
+    PAYOUT_REQUESTS: "payments/payout-requests/",
+    PURCHASE_PACKAGE: "payments/purchase-package/",
   },
 
   FILES: {

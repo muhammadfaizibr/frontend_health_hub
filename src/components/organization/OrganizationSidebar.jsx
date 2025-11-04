@@ -1,13 +1,14 @@
+// components/organization/OrganizationSidebar.jsx
 "use client";
+
 import React from "react";
-import Link from "next/link";
-import NavLink from "../ui/NavLink";
+import NavLink from "@/components/ui/NavLink";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/api/services/auth";
 
-export default function PatientSidebar() {
-  // const router = useRouter();
+export default function OrganizationSidebar() {
+  const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = async () => {
@@ -21,15 +22,14 @@ export default function PatientSidebar() {
   };
 
   const navItems = [
-    { href: "/patient", icon: "dashboard", label: "Dashboard" },
-    { href: "/patient/cases", icon: "folder", label: "Cases" },
-    { href: "/patient/appointments", icon: "calendar_today", label: "Appointments" },
-    { href: "/patient/find-doctor", icon: "search", label: "Find Doctor" },
-    { href: "/patient/emergency", icon: "emergency", label: "Emergency Care" }
+    { href: "/organization", icon: "dashboard", label: "Dashboard" },
+    { href: "/organization/appointments", icon: "calendar_today", label: "Appointments" },
+    { href: "/organization/transactions", icon: "payments", label: "Transactions" },
+    { href: "/organization/purchase-credits", icon: "account_balance_wallet", label: "Credits & Billing" },
   ];
 
   const bottomNavItems = [
-    { href: "/patient/profile", icon: "person", label: "Profile" },
+    { href: "/organization/profile", icon: "business", label: "Organization Profile" },
     { href: "/", icon: "arrow_back", label: "Back to Main" }
   ];
 
